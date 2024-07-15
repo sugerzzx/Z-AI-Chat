@@ -15,3 +15,49 @@
     text-wrap: balance;
   }
 }
+
+html.dark {
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  height: 1rem;
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar:horizontal {
+  /* 定义了水平滚动条的样式 */
+  height: 0.5rem;
+  width: 1rem;
+}
+
+::-webkit-scrollbar-track {
+  /* 滚动槽 */
+  background-color: transparent;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb {
+  /* 滚动条里面的小方块 */
+  background-color: rgba(217, 217, 227, 0.8);
+  border-color: rgb(255, 255, 255);
+  border-radius: 9999px;
+  border-width: 1px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  /* 鼠标悬停在滚动条上的样式 */
+  background-color: rgb(236, 236, 241);
+}
+
+.dark::-webkit-scrollbar-thumb {
+  background-color: rgb(86, 88, 105);
+}
+
+.dark::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(172, 172, 190);
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
