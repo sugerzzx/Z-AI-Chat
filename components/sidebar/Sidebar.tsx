@@ -3,7 +3,7 @@ import { FC } from "react";
 import SwitchAndNewChat from "./SwitchAndNewChat";
 import { useAppContext } from "../AppContextProvider";
 import ChatGpt from "./ChatGpt";
-import ClickTrans from "../common/ClickTrans";
+import ClickTrans from "../common/ui/ClickTrans";
 import ChatHistory from "./ChatHistory";
 
 interface SideBarProps {}

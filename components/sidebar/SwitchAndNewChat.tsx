@@ -1,6 +1,6 @@
 import { FC } from "react";
-import SidebarControler from "../common/SidebarController";
-import NewChatBtn from "../common/NewChatBtn";
+import SidebarControler from "../common/page/SidebarController";
+import NewChatBtn from "../common/page/NewChatBtn";
 
 interface SwitchAndNewChatProps {}
 

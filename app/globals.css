@@ -61,3 +61,17 @@ html.dark {
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+select,
+textarea {
+  --tw-shadow: 0 0 transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  border-color: #9b9b9b;
+  border-radius: 0;
+  border-width: 1px;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  padding: .5rem .75rem
+}

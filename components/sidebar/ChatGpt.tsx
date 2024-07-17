@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import ClickTrans from "../common/ClickTrans";
+import ClickTrans from "../common/ui/ClickTrans";
 import Link from "next/link";
 
 interface ChatGptProps {}

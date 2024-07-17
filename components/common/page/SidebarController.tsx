@@ -1,8 +1,8 @@
 "use client";
 import { FC } from "react";
-import BootstrapTooltip from "./BootstrapTooltip";
+import BootstrapTooltip from "../ui/BootstrapTooltip";
 import { IconButton } from "@mui/material";
-import { useAppContext } from "../AppContextProvider";
+import { useAppContext } from "../../AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
 import { cn } from "@/lib/utils";
 
@@ -10,7 +10,7 @@ interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonEle
   title: string;
 }
 
-const SidebarControler: FC<SidebarControlerProps> = ({ className, title }) => {
+const SidebarControler: FC<SidebarC1ontrolerProps> = ({ className, title }) => {
   const {
     state: { isSidebarOpen },
     dispatch,

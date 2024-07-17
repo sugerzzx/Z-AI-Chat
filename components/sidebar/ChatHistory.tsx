@@ -1,7 +1,8 @@
 import { groupByDate } from "@/lib/utils";
 import { Chat } from "@/types/chat";
 import { FC, useMemo, useState } from "react";
-import BootstrapTooltip from "../common/BootstrapTooltip";
+import BootstrapTooltip from "../common/ui/BootstrapTooltip";
+import Link from "next/link";
 
 interface ChatHistoryProps {}
 
@@ -163,12 +164,12 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
               {chatList.map(({ id, title }: Chat) => (
                 <li className="relative" style={{ opacity: 1, height: "auto" }} key={id}>
                   <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
-                    <a href="/c/4486ae81-eff8-4784-adb7-832da99febaa" className="flex items-center gap-2 p-2">
+                    <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">
                       <div className="relative grow overflow-hidden whitespace-nowrap" dir="auto">
                         {title}
                         <div className="absolute bottom-0 top-0 to-transparent ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r from-token-sidebar-surface-primary from-token-sidebar-surface-primary can-hover:group-hover:from-token-sidebar-surface-secondary w-8 from-0% can-hover:group-hover:w-20 can-hover:group-hover:from-60% juice:can-hover:group-hover:w-10"></div>
                       </div>
-                    </a>
+                    </Link>
                     <BootstrapTooltip title="Options" placement="top">
                       <div className="absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0 hidden can-hover:group-hover:flex">
                         <span className="" data-state="closed">
