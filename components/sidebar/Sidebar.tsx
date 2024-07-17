@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import ControlerBtns from "./ControlerBtns";
+import SwitchAndNewChat from "./SwitchAndNewChat";
 import { useAppContext } from "../AppContextProvider";
 import ChatGpt from "./ChatGpt";
 import ClickTrans from "../common/ClickTrans";
@@ -19,7 +19,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
     >
       <div className="h-full w-[260px]">
         <nav className="flex h-full w-full flex-col px-3 pb-3.5 juice:pb-0">
-          <ControlerBtns />
+          <SwitchAndNewChat />
           <div className="flex-col flex-1 transition-opacity duration-500 -mr-2 pr-2 overflow-y-auto">
             <ChatGpt />
             <div>
