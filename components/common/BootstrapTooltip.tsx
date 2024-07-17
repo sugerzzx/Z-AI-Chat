@@ -1,8 +1,9 @@
+"use client";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Tooltip, { TooltipProps, tooltipClasses } from "@mui/material/Tooltip";
 
-const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => <Tooltip {...props} arrow classes={{ popper: className }} />)(({ theme }) => ({
+const BootstrapTooltip = styled(({ className, enterDelay, ...props }: TooltipProps) => <Tooltip {...props} arrow classes={{ popper: className }} enterDelay={enterDelay || 500} />)(({ theme }) => ({
   [`& .${tooltipClasses.arrow}`]: {
     color: "#0d0d0d",
   },
