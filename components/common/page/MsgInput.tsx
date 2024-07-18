@@ -1,4 +1,6 @@
+"use client";
 import { FC } from "react";
+import { TextareaAutosize } from "@mui/material";
 
 interface MsgInputProps {}
 
@@ -15,15 +17,6 @@ const MsgInput: FC<MsgInputProps> = ({}) => {
                   <div className="flex items-end gap-1.5 md:gap-2">
                     <div>
                       <div className="flex flex-col">
-                        <input type="file" tabIndex={-1} className="hidden" style={{ display: "none" }} />
-                        <button
-                          type="button"
-                          id="radix-:rqc:"
-                          aria-haspopup="menu"
-                          aria-expanded="false"
-                          data-state="closed"
-                          className="text-token-text-primary border border-transparent inline-flex items-center justify-center gap-1 rounded-lg text-sm dark:transparent dark:bg-transparent leading-none outline-none cursor-pointer hover:bg-token-main-surface-secondary dark:hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary radix-state-active:text-token-text-secondary radix-disabled:cursor-auto radix-disabled:bg-transparent radix-disabled:text-token-text-tertiary dark:radix-disabled:bg-transparent m-0 h-0 w-0 border-none bg-transparent p-0"
-                        ></button>
                         <button
                           className="flex items-center justify-center text-token-text-primary juice:h-8 juice:w-8 dark:text-white juice:rounded-full focus-visible:outline-black dark:focus-visible:outline-white juice:mb-1 juice:ml-1.5"
                           aria-disabled="false"
@@ -41,16 +34,14 @@ const MsgInput: FC<MsgInputProps> = ({}) => {
                       </div>
                     </div>
                     <div className="flex min-w-0 flex-1 flex-col">
-                      <textarea
+                      <TextareaAutosize
                         id="prompt-textarea"
                         tabIndex={0}
                         data-id="root"
                         dir="auto"
-                        rows={1}
                         placeholder="给“ChatGPT”发送消息"
-                        className="m-0 resize-none border-0 bg-transparent px-0 text-token-text-primary focus:ring-0 focus-visible:ring-0 max-h-[25dvh] max-h-52"
-                        style={{ height: "40px", overflowY: "hidden" }}
-                      ></textarea>
+                        className="m-0 resize-none border-0 bg-transparent px-0 text-token-text-primary focus:ring-0 focus-visible:ring-0 max-h-[25dvh] max-h-52 "
+                      />
                     </div>
                     <button
                       disabled={false}
