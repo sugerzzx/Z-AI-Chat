@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import url(./copy.css);
+@import url(./markdown.css);
 
 :root {
   --foreground-rgb: 0, 0, 0;
