@@ -1,10 +1,39 @@
 "use client";
-import { FC } from "react";
+import { FC, useState } from "react";
 import { TextareaAutosize } from "@mui/material";
 
 interface MsgInputProps {}
 
 const MsgInput: FC<MsgInputProps> = ({}) => {
+  const [userInput, setUserInput] = useState<string>("");
+  const isDiabled = userInput.length === 0;
+  const sendMessage = async () => {
+    const body = JSON.stringify({ message: userInput });
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+    });
+    if (!response.ok) {
+      console.error("Failed to send message");
+    }
+    if (!response.body) {
+      console.error("Response body is empty");
+    }
+    const reader = response.body?.getReader();
+    const decoder = new TextDecoder();
+    while (true) {
+      const result = await reader?.read();
+      if (result?.done) {
+        const message = decoder.decode(result?.value);
+        console.log(message);
+        break;
+      }
+    }
+    setUserInput("");
+  };
   return (
     <div className="w-full md:pt-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:w-[calc(100%-.5rem)] juice:w-full">
       <div className="px-3 text-base md:px-4 m-auto md:px-5 lg:px-1 xl:px-5">
@@ -41,12 +70,14 @@ const MsgInput: FC<MsgInputProps> = ({}) => {
                         dir="auto"
                         placeholder="给“ChatGPT”发送消息"
                         className="m-0 resize-none border-0 bg-transparent px-0 text-token-text-primary focus:ring-0 focus-visible:ring-0 max-h-[25dvh] max-h-52 "
+                        onChange={e => setUserInput(e.target.value)}
                       />
                     </div>
                     <button
-                      disabled={false}
+                      disabled={isDiabled}
                       data-testid="fruitjuice-send-button"
                       className="mb-1 me-1 flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:bg-[#D7D7D7] disabled:text-[#f4f4f4] disabled:hover:opacity-100 dark:bg-white dark:text-black dark:focus-visible:outline-white disabled:dark:bg-token-text-quaternary dark:disabled:text-token-main-surface-secondary"
+                      onClick={sendMessage}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32" className="icon-2xl">
                         <path
