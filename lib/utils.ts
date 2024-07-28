@@ -44,3 +44,5 @@ export function groupByDate(chatList: Chat[]) {
   });
   return groupList;
 }
+
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
