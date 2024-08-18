@@ -3,14 +3,15 @@ import MsgInput from "./MsgInput";
 
 interface MsgAndExamContainerProps {
   children?: React.ReactNode;
+  conversationId?: string;
 }
 
-const MsgAndExamContainer: FC<MsgAndExamContainerProps> = ({ children }) => {
+const MsgAndExamContainer: FC<MsgAndExamContainerProps> = ({ children, conversationId }) => {
   return (
     <>
       <div className="flex h-full flex-col focus-visible:outline-0">
         <div className="flex-1 overflow-hidden">{children}</div>
-        <MsgInput />
+        <MsgInput conversationId={conversationId} />
       </div>
       <div className="group fixed bottom-3 end-3 z-10 hidden gap-1 juice:bottom-2 juice:end-2 md:flex juice:lg:bottom-3 juice:lg:end-3">
         <button

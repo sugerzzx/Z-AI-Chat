@@ -2,10 +2,10 @@ import { FC } from "react";
 import Markdown from "../common/ui/Markdown";
 
 interface AssistantMessageProps {
-  content: string;
+  content: string | null;
 }
 
-const AssistantMessage: FC<AssistantMessageProps> = ({ content }) => {
+const AssistantMessage: FC<AssistantMessageProps> = ({ content = "" }) => {
   return (
     <>
       <div className="flex-shrink-0 flex flex-col relative items-end">

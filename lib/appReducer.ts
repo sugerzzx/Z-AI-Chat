@@ -1,14 +1,15 @@
-import { ChatMessage } from "@/types/chat";
+import { MessageWithChildren } from "@/types/conversation";
 
 export type State = {
   isSidebarOpen: boolean;
-  messageList: ChatMessage[];
+  messageList: MessageWithChildren[];
+  conversationId: string;
 };
 
 export enum ActionType {
   UPDATE = 'UPDATE',
   ADD_MESSAGE = 'ADD_MESSAGE',
-  UPDATE_MESSAGE = 'UPDATE_MESSAGE'
+  UPDATE_MESSAGE = 'UPDATE_MESSAGE',
 }
 
 type UpdateAction = {
@@ -19,7 +20,7 @@ type UpdateAction = {
 
 type MessageAction = {
   type: ActionType.ADD_MESSAGE | ActionType.UPDATE_MESSAGE;
-  message: ChatMessage;
+  message: MessageWithChildren;
 };
 
 export type Action = UpdateAction | MessageAction;
@@ -27,6 +28,7 @@ export type Action = UpdateAction | MessageAction;
 export const initialState: State = {
   isSidebarOpen: true,
   messageList: [],
+  conversationId: '',
 };
 
 const actionMap = new Map<ActionType, (state: State, action: any) => State>([
@@ -44,7 +46,7 @@ const actionMap = new Map<ActionType, (state: State, action: any) => State>([
       return message;
     });
     return { ...state, messageList };
-  }]
+  }],
 ]);
 
 export const appReducer = (state: State, action: Action) => {

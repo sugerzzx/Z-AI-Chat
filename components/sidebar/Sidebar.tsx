@@ -1,22 +1,15 @@
-"use client";
 import { FC } from "react";
 import SwitchAndNewChat from "./SwitchAndNewChat";
-import { useAppContext } from "../AppContextProvider";
 import ChatGpt from "./ChatGpt";
 import ClickTrans from "../common/ui/ClickTrans";
 import ChatHistory from "./ChatHistory";
+import Container from "./Container";
 
 interface SideBarProps {}
 
 const SideBar: FC<SideBarProps> = ({}) => {
-  const {
-    state: { isSidebarOpen },
-  } = useAppContext();
   return (
-    <div
-      className="flex-shrink-0 overflow-x-hidden transition-all bg-token-sidebar-surface-primary"
-      style={{ width: isSidebarOpen ? "260px" : "0px", visibility: isSidebarOpen ? "visible" : "hidden" }}
-    >
+    <Container>
       <div className="h-full w-[260px]">
         <nav className="flex h-full w-full flex-col px-3 pb-3.5 juice:pb-0">
           <SwitchAndNewChat />
@@ -101,7 +94,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
           </div>
         </nav>
       </div>
-    </div>
+    </Container>
   );
 };
 

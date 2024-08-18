@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Example from "./Example";
+import Example from "./ExampleItem";
 
 interface DoubleExamplesProps {}
 

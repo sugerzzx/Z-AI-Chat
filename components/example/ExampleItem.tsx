@@ -1,9 +1,9 @@
 import { FC } from "react";
 import IdeaSvg from "../svg/IdeaSvg";
 
-interface ExampleProps {}
+interface ExampleItemProps {}
 
-const Example: FC<ExampleProps> = ({}) => {
+const ExampleItem: FC<ExampleItemProps> = ({}) => {
   return (
     <button className="relative flex w-40 flex-col gap-2 rounded-2xl border border-token-border-light px-3 pb-4 pt-3 text-start align-top text-[15px] shadow-xxs transition enabled:hover:bg-token-main-surface-secondary disabled:cursor-not-allowed">
       <IdeaSvg />
@@ -12,4 +12,4 @@ const Example: FC<ExampleProps> = ({}) => {
   );
 };
 
-export default Example;
+export default ExampleItem;

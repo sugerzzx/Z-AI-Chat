@@ -1,155 +1,40 @@
+"use client";
 import { groupByDate } from "@/lib/utils";
-import { Chat } from "@/types/chat";
-import { FC, useMemo, useState } from "react";
+import { ConversationTitle } from "@/types/conversation";
+import { FC, useEffect, useMemo, useState } from "react";
 import BootstrapTooltip from "../common/ui/BootstrapTooltip";
 import Link from "next/link";
+import { useEventBusContext } from "../EventBusContext";
 
-interface ChatHistoryProps {}
+interface ChatHistoryProps { }
 
-const ChatHistory: FC<ChatHistoryProps> = ({}) => {
-  const [chatList] = useState<Chat[]>([
-    {
-      id: "1",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now(),
-    },
-    {
-      id: "2",
-      title: "Whatever the mind of man can conceive and believe, it can achieve.",
-      updateTime: Date.now() - 100,
-    },
-    {
-      id: "3",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 200,
-    },
-    {
-      id: "4",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 300,
-    },
-    {
-      id: "5",
-      title: "Whatever the mind of man can conceive and believe, it can achieve.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24,
-    },
-    {
-      id: "6",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 2,
-    },
-    {
-      id: "7",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 3,
-    },
-    {
-      id: "8",
-      title: "Whatever the mind of man can conceive and believe, it can achieve.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 4,
-    },
-    {
-      id: "9",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 5,
-    },
-    {
-      id: "10",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 6,
-    },
-    {
-      id: "11",
-      title: "Whatever the mind of man can conceive and believe, it can achieve.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 7,
-    },
-    {
-      id: "12",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 8,
-    },
-    {
-      id: "13",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 9,
-    },
-    {
-      id: "14",
-      title: "Whatever the mind of man can conceive and believe, it can achieve.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 10,
-    },
-    {
-      id: "15",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 11,
-    },
-    {
-      id: "16",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 12,
-    },
-    {
-      id: "17",
-      title: "Whatever the mind of ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 13,
-    },
-    {
-      id: "18",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 14,
-    },
-    {
-      id: "19",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 15,
-    },
-    {
-      id: "20",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "21",
-      title: "Strive not to be a success, but rather to be of value.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 14,
-    },
-    {
-      id: "22",
-      title: "Life isn’t about getting and having, it’s about giving and being.",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 15,
-    },
-    {
-      id: "23",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "24",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "25",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "26",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "27",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-    {
-      id: "28",
-      title: "Whatever the mind ",
-      updateTime: Date.now() - 1000 * 60 * 60 * 24 * 16,
-    },
-  ]);
+const ChatHistory: FC<ChatHistoryProps> = ({ }) => {
+  const [chatList, setChatList] = useState<ConversationTitle[]>([]);
   const historyList = useMemo(() => groupByDate(chatList), [chatList]);
+  const { subscribe, unsubscribe } = useEventBusContext();
+
+  const fetchConversations = async () => {
+    const response = await fetch("/api/conversations");
+    const { items } = await response.json();
+    setChatList(items);
+  };
+
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
+  useEffect(() => {
+    const callback = (conversationId: string) => {
+      setChatList((prev) => {
+        return [...prev, { id: conversationId, title: "New Chat", updateTime: Date.now() }];
+      });
+    };
+    subscribe("updateConversationTitle", callback);
+    return () => {
+      unsubscribe("updateConversationTitle", callback);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm juice:mt-5">
       <div>
@@ -161,7 +46,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
               </span>
             </div>
             <ol>
-              {chatList.map(({ id, title }: Chat) => (
+              {chatList.map(({ id, title }: ConversationTitle) => (
                 <li className="relative" style={{ opacity: 1, height: "auto" }} key={id}>
                   <div className="group relative rounded-lg active:opacity-90 hover:bg-token-sidebar-surface-secondary">
                     <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">

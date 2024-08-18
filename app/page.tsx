@@ -1,18 +1,30 @@
+"use client";
 import MsgAndExamContainer from "@/components/common/page/MsgAndExamContainer";
-import ExampleArea from "@/components/examplePage/ExampleArea";
-import PageHeader from "@/components/common/page/PageHeader";
+import ExampleComp from "@/components/example/ExampleComp";
+import { useEffect, useState } from "react";
+import { useEventBusContext } from "@/components/EventBusContext";
+import Conversation from "@/components/chatPage/Conversation";
+import { useAppContext } from "@/components/AppContextProvider";
+import { ActionType } from "@/lib/appReducer";
 
 export default function Home() {
-  return (
-    <>
-      <MsgAndExamContainer>
-        <div className="relative h-full">
-          <div className="absolute left-0 right-0">
-            <PageHeader />
-          </div>
-          <ExampleArea />
-        </div>
-      </MsgAndExamContainer>
-    </>
-  );
+  const { dispatch } = useAppContext();
+  const { subscribe, unsubscribe } = useEventBusContext();
+  const [isConversation, setIsConversation] = useState<boolean>(false);
+
+  useEffect(() => {
+    const callback = (conversationId: string) => {
+      console.log("new conversation", conversationId);
+      dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] });
+      setIsConversation(true);
+    };
+    subscribe("newConversation", callback);
+    return () => {
+      unsubscribe("newConversation", callback);
+    };
+  }, []);
+
+  return <MsgAndExamContainer>
+    {isConversation ? <Conversation /> : <ExampleComp />}
+  </MsgAndExamContainer>;
 }

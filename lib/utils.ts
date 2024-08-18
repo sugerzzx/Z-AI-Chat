@@ -1,14 +1,13 @@
 import { ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { Chat } from "@/types/chat";
-
+import { ConversationTitle } from "@/types/conversation";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function groupByDate(chatList: Chat[]) {
-  const groupMap = new Map<string, Chat[]>();
+export function groupByDate(chatList: ConversationTitle[]) {
+  const groupMap = new Map<string, ConversationTitle[]>();
   chatList.forEach((item) => {
     const now = new Date();
     const updateTime = new Date(item.updateTime);

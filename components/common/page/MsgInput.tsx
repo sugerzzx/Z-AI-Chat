@@ -2,77 +2,116 @@
 import { FC, useState, useRef } from "react";
 import { TextareaAutosize } from "@mui/material";
 import { v4 as uuid } from "uuid";
-import { ChatMessage } from "@/types/chat";
+import { SSE } from "sse.js";
 import { useAppContext } from "@/components/AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
+import { Message } from "@prisma/client";
+import { ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
+import { ConversationPayload, MessageWithChildren, PayloadMessage } from "@/types/conversation";
+import { ReplaceFieldType } from "@/types/typeUtils";
+import { useEventBusContext } from "@/components/EventBusContext";
+import { useRouter } from "next/navigation";
 
-interface MsgInputProps {}
+interface MsgInputProps {
+  conversationId?: string;
+}
 
-const MsgInput: FC<MsgInputProps> = ({}) => {
+const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   const [userInput, setUserInput] = useState<string>("");
-  const isGenerating = useRef(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const isStop = useRef(false);
-  const isDiabled = isGenerating.current ? false : userInput.length === 0;
+  const isDiabled = isGenerating ? false : userInput.length === 0;
   const {
     state: { messageList },
     dispatch,
   } = useAppContext();
+  const { publish } = useEventBusContext();
+  const router = useRouter();
 
-  const sendMessage = async () => {
-    const message: ChatMessage = {
-      id: uuid(),
-      role: "user",
-      content: userInput,
-    };
-    const messages = messageList.concat(message);
-
-    dispatch({ type: ActionType.ADD_MESSAGE, message });
-    setUserInput("");
-
-    const body = JSON.stringify({ messages });
-    const controller = new AbortController();
-    const response = await fetch("/api/chat", {
+  const upsertMessage = async (message: Omit<Message, "createTime">) => {
+    const response = await fetch("/api/message/upsert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      signal: controller.signal,
-      body,
+      body: JSON.stringify(message),
     });
     if (!response.ok) {
-      console.error("Failed to send message");
+      console.log(response.statusText);
+      return;
     }
-    if (!response.body) {
-      console.error("Response body is empty");
-    }
+    const { data } = await response.json();
+    return data.message;
+  };
 
-    const receivedMessage: ChatMessage = {
+  const sendMessage = async () => {
+    const message: PayloadMessage = {
       id: uuid(),
-      role: "assistant",
-      content: "",
+      role: Role.USER,
+      content: userInput,
+      createTime: Date.now(),
     };
-    dispatch({ type: ActionType.ADD_MESSAGE, message: receivedMessage });
 
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
-    let content = "";
-    isGenerating.current = true;
-    while (isGenerating.current) {
+    const parentMessage = conversationId === "" ? null : messageList[messageList.length - 1];
+
+    const payload: ConversationPayload = {
+      action: ConversationAction.NEXT,
+      messages: [message],
+      parentMessageId: parentMessage?.id || uuid(),
+      conversationId: conversationId,
+      model: ModelType.AUTO,
+    };
+
+    publish("newConversation", payload.conversationId);
+    parentMessage && dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, message.id] } });
+    const newMessage = { ...message, conversationId, parent: payload.parentMessageId, children: [] };
+    dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
+    setUserInput("");
+    doSend(payload);
+  };
+
+  const doSend = async (payload: ConversationPayload) => {
+    const source = new SSE("/api/conversation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      payload: JSON.stringify(payload),
+    });
+
+    const getMessage = (data: string): MessageWithChildren => {
+      const message: ReplaceFieldType<Message, "createTime", string> = JSON.parse(data);
+      return { ...message, createTime: Date.parse(message.createTime), children: [] };
+    };
+
+    let newConversationId = '';
+    source.addEventListener("start", (event: MessageEvent) => {
+      setIsGenerating(true);
+      const newMessage = getMessage(event.data);
+      newConversationId = newMessage.conversationId;
+      const message = payload.messages[0];
+      const parentMessage = { ...message, conversationId, parent: payload.parentMessageId, children: [] };
+      dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, newMessage.id] } });
+      dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
+      if (!conversationId) {
+        publish("updateConversationTitle", newMessage.conversationId);
+      }
+    });
+
+    source.addEventListener("message", (event: MessageEvent) => {
       if (isStop.current) {
         isStop.current = false;
-        isGenerating.current = false;
-        controller.abort();
-        break;
+        setIsGenerating(false);
+        source.close();
+        return;
       }
-      const result = await reader?.read();
-      const chunk = decoder.decode(result?.value);
-      content += chunk;
-      dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...receivedMessage, content } });
-      if (result?.done) {
-        isGenerating.current = false;
-        break;
-      }
-    }
+      dispatch({ type: ActionType.UPDATE_MESSAGE, message: getMessage(event.data) });
+    });
+
+    source.addEventListener("end", () => {
+      setIsGenerating(false);
+      !conversationId && router.push(`/c/${newConversationId}`);
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -132,9 +171,9 @@ const MsgInput: FC<MsgInputProps> = ({}) => {
                     disabled={isDiabled}
                     data-testid="fruitjuice-send-button"
                     className="mb-1 me-1 flex h-8 w-8 items-center justify-center rounded-full bg-black text-white transition-colors hover:opacity-70 focus-visible:outline-none focus-visible:outline-black disabled:bg-[#D7D7D7] disabled:text-[#f4f4f4] disabled:hover:opacity-100 dark:bg-white dark:text-black dark:focus-visible:outline-white disabled:dark:bg-token-text-quaternary dark:disabled:text-token-main-surface-secondary"
-                    onClick={isGenerating.current ? stopGenerate : sendMessage}
+                    onClick={isGenerating ? stopGenerate : sendMessage}
                   >
-                    {isGenerating.current ? (
+                    {isGenerating ? (
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" className="icon-lg">
                         <rect width="10" height="10" x="7" y="7" fill="currentColor" rx="1.25"></rect>
                       </svg>
