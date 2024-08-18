@@ -1,13 +1,22 @@
 import { NextRequest } from "next/server";
 import { setGlobalDispatcher, ProxyAgent } from "undici";
+import EventEmitter from "events";
+import prisma from "@/lib/db";
+import { googleGenAI } from "@/lib/googleGen";
 import { sleep } from "@/lib/utils";
 import { env } from "process";
-import { googleGenAI } from "@/lib/googleGen";
 import { ConversationPayload } from "@/types/conversation";
-import { DEFAULT_TYPE, ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
-import prisma from "@/lib/db";
 import { Message } from "@prisma/client";
+import { DEFAULT_TYPE, ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
+import { GenerateContentStreamResult } from "@google/generative-ai";
 
+enum Event {
+  UPDATE_MESSAGE = "updateMessage",
+  STOP_GENERATE = "stopGenerate",
+}
+const DEFAULT_DELAY = 10;
+
+const eventEmitter = new EventEmitter();
 
 export async function POST(request: NextRequest) {
   const payload: ConversationPayload = await request.json();
@@ -48,14 +57,10 @@ export async function POST(request: NextRequest) {
 
   const assistantResponse = await getAssistantResponse(userMessage.content!, payload.model);
 
-  await prisma.message.update({
-    where: {
-      id: assistantMessage.id,
-    },
-    data: {
-      content: assistantResponse,
-    },
-  });
+  // 监听更新消息事件
+  onUpdateMessage();
+
+  // 更新对话的当前节点
   await prisma.conversation.update({
     where: {
       id: assistantMessage.conversationId,
@@ -64,6 +69,7 @@ export async function POST(request: NextRequest) {
       currentNode: assistantMessage.id,
     },
   });
+
   return await getResponse(assistantResponse, assistantMessage);
 }
 
@@ -109,24 +115,36 @@ async function findMessage(id: string) {
   });
 }
 
-async function getResponse(context: string, message: Message) {
+async function getResponse(result: GenerateContentStreamResult | ReturnType<typeof getMockStream>, message: Message) {
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
   const encoder = new TextEncoder();
 
   (async function () {
+    // 监听停止生成事件
+    let isStop = false;
+    eventEmitter.on(Event.STOP_GENERATE, () => {
+      isStop = true;
+    });
     let content = "";
     writer.write(encoder.encode(`event: start\ndata: ${JSON.stringify({ ...message, content })}\n\n`));
-    for (let i = 0; i < context.length; i++) {
-      await sleep(10);
-      content += context[i];
-      writer.write(
-        encoder.encode(
-          `event: message\ndata: ${JSON.stringify({ ...message, content })}\n\n`
-        )
-      );
+    for await (const chunk of result.stream) {
+      if (isStop) {
+        break;
+      }
+      const text = chunk.text();
+      for (const char of text) {
+        content += char;
+        writer.write(
+          encoder.encode(
+            `event: message\ndata: ${JSON.stringify({ ...message, content })}\n\n`
+          )
+        );
+        await sleep(DEFAULT_DELAY); // 延迟 10 毫秒发送每个字符
+      }
     }
     writer.write(encoder.encode(`event: end\ndata: [DONE]\n\n`));
+    eventEmitter.emit(Event.UPDATE_MESSAGE, message.id, content);
     writer.close();
   })();
 
@@ -147,7 +165,42 @@ async function getAssistantResponse(requestMessage: string, modelType: ModelType
 
   const model = googleGenAI.getGenerativeModel({ model: modelType === ModelType.AUTO ? DEFAULT_TYPE : modelType });
 
-  const result = await model.generateContent(requestMessage);
+  const result = process.env.MOCK_MESSAGE ? getMockStream(process.env.MOCK_MESSAGE) : await model.generateContentStream(requestMessage);
 
-  return result.response.text();
+  return result;
+}
+
+function getMockStream(content: string) {
+  const getChunk = (char: string) => ({
+    text: () => char,
+  });
+
+  // 生成一个异步迭代器
+  const stream = {
+    [Symbol.asyncIterator]: async function* () {
+      for (const char of content) {
+        // 每次迭代返回一个包含 text 方法的对象
+        yield getChunk(char);
+      }
+    }
+  };
+
+  return { stream };
+}
+
+function onUpdateMessage() {
+  eventEmitter.on(Event.UPDATE_MESSAGE, async (id: string, content: string) => {
+    await prisma.message.update({
+      where: {
+        id,
+      },
+      data: {
+        content,
+      },
+    });
+  });
+}
+
+export async function GET() {
+  eventEmitter.emit(Event.STOP_GENERATE);
 }

@@ -31,6 +31,8 @@ DATABASE_URL="file:./dev.db" # 数据库连接地址
 GOOGLE_GEN_API_KEY="Your Google API Key" # 确保使用可用的 Google API Key
 
 LOCAL_PROXY_URL="http://127.0.0.1:8080" # 如果需要使用代理访问 Google API，设置代理地址
+
+MOCK_MESSAGE="Hello, World!" # 模拟消息，有值时，不会调用 Google API
 ```
 
 3. 设置数据库

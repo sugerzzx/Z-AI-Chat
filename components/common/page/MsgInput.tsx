@@ -116,7 +116,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
-      if (e.shiftKey || isGenerating.current) {
+      if (e.shiftKey || isGenerating) {
         return;
       }
       e.preventDefault();
@@ -124,7 +124,10 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     }
   };
 
-  const stopGenerate = () => {
+  const stopGenerate = async () => {
+    await fetch("/api/conversation", {
+      method: "GET",
+    });
     isStop.current = true;
   };
   return (
