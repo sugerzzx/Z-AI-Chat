@@ -1,6 +1,6 @@
 # Z-Ai-Chat
 
-此项目为个人在基于 `next.js` 和 `prisma` 的全栈项目的练习项目，UI 仿照 ChatGpt，使用 `GoogleGenerativeAI` 生成对话。
+此项目是一个 AI 聊天应用的实战项目，项目使用`next.js` 和 `prisma`，UI 仿照 ChatGpt，使用 `GoogleGenerativeAI` 生成对话。
 
 ## 开始
 
@@ -16,9 +16,13 @@ pnpm install
 
 2. 添加环境变量
 
+添加 `.env` 文件
+
 ```bash
 cp .env.example .env
 ```
+
+修改 `.env` 文件
 
 ```bash
 # .env
