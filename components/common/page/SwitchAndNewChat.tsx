@@ -4,9 +4,9 @@ import { useAppContext } from "../../AppContextProvider";
 import SidebarControler from "./SidebarController";
 import NewChatBtn from "./NewChatBtn";
 
-interface SwitchAndNewChatProps {}
+interface SwitchAndNewChatProps { }
 
-const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({}) => {
+const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({ }) => {
   const {
     state: { isSidebarOpen },
   } = useAppContext();
@@ -14,7 +14,7 @@ const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({}) => {
     <></>
   ) : (
     <div className="flex items-center">
-      <SidebarControler className="hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary" title="Open sidebar" />
+      <SidebarControler className="hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary" title="打开边栏" />
       <NewChatBtn className="hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary" />
     </div>
   );

@@ -18,7 +18,7 @@ const Title: FC<TitleProps> = ({ id, title, isCurrent }) => {
           <div className={cn("absolute bottom-0 top-0 to-transparent ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r", isCurrent ? 'from-token-sidebar-surface-secondary w-10 from-60%' : 'from-token-sidebar-surface-primary from-token-sidebar-surface-primary can-hover:group-hover:from-token-sidebar-surface-secondary w-8 from-0% can-hover:group-hover:w-10 can-hover:group-hover:from-60%')}></div>
         </div>
       </Link>
-      <BootstrapTooltip title="Options" placement="top">
+      <BootstrapTooltip title="选项" placement="top">
         <div className={cn("absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0", isCurrent ? 'flex' : 'hidden can-hover:group-hover:flex')}>
           <span data-state="closed">
             <button

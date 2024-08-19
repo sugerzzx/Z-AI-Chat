@@ -1,22 +1,22 @@
 "use client";
 import { FC } from "react";
 import BootstrapTooltip from "../ui/BootstrapTooltip";
-import { IconButton } from "@mui/material";
+import { IconButton, TooltipProps } from "@mui/material";
 import { useAppContext } from "../../AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
 import { cn } from "@/lib/utils";
 
-interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Pick<TooltipProps, "placement"> {
   title: string;
 }
 
-const SidebarControler: FC<SidebarC1ontrolerProps> = ({ className, title }) => {
+const SidebarControler: FC<SidebarControlerProps> = ({ className, title, placement }) => {
   const {
     state: { isSidebarOpen },
     dispatch,
   } = useAppContext();
   return (
-    <BootstrapTooltip title={title}>
+    <BootstrapTooltip title={title} placement={placement} >
       <IconButton
         aria-label="delete"
         size="large"

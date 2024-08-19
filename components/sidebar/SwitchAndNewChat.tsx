@@ -2,12 +2,12 @@ import { FC } from "react";
 import SidebarControler from "../common/page/SidebarController";
 import NewChatBtn from "../common/page/NewChatBtn";
 
-interface SwitchAndNewChatProps {}
+interface SwitchAndNewChatProps { }
 
-const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({}) => {
+const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({ }) => {
   return (
     <div className="flex justify-between h-14 items-center">
-      <SidebarControler className="hover:bg-token-sidebar-surface-secondary focus-visible:bg-token-sidebar-surface-secondary" title="Close sidebar" />
+      <SidebarControler className="hover:bg-token-sidebar-surface-secondary focus-visible:bg-token-sidebar-surface-secondary" title="关闭边栏" placement="right" />
       <NewChatBtn className="hover:bg-token-sidebar-surface-secondary focus-visible:bg-token-sidebar-surface-secondary" />
     </div>
   );
