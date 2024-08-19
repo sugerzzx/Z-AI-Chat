@@ -14,7 +14,6 @@ export default function Home() {
 
   useEffect(() => {
     const callback = (conversationId: string) => {
-      console.log("new conversation", conversationId);
       dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] });
       setIsConversation(true);
     };
