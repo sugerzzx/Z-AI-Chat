@@ -18,6 +18,8 @@ const DEFAULT_DELAY = 10;
 
 const eventEmitter = new EventEmitter();
 
+setProxyAgent();
+
 export async function POST(request: NextRequest) {
   const payload: ConversationPayload = await request.json();
 
@@ -156,16 +158,18 @@ async function getResponse(result: GenerateContentStreamResult | ReturnType<type
   });
 }
 
-async function getAssistantResponse(requestMessage: string, modelType: ModelType) {
+function setProxyAgent() {
   // 如果有设置 LOCAL_PROXY_URL 环境变量，则使用代理
   if (env.LOCAL_PROXY_URL) {
     const dispatcher = new ProxyAgent({ uri: new URL(env.LOCAL_PROXY_URL).toString() });
     setGlobalDispatcher(dispatcher);
   }
+}
 
+async function getAssistantResponse(requestMessage: string, modelType: ModelType) {
   const model = googleGenAI.getGenerativeModel({ model: modelType === ModelType.AUTO ? DEFAULT_TYPE : modelType });
 
-  const result = process.env.MOCK_MESSAGE ? getMockStream(process.env.MOCK_MESSAGE) : await model.generateContentStream(requestMessage);
+  const result = env.MOCK_MESSAGE ? getMockStream(env.MOCK_MESSAGE) : await model.generateContentStream(requestMessage);
 
   return result;
 }
