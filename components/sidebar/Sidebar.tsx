@@ -5,9 +5,9 @@ import ClickTrans from "../common/ui/ClickTrans";
 import ChatHistory from "./ChatHistory";
 import Container from "./Container";
 
-interface SideBarProps {}
+interface SideBarProps { }
 
-const SideBar: FC<SideBarProps> = ({}) => {
+const SideBar: FC<SideBarProps> = ({ }) => {
   return (
     <Container>
       <div className="h-full w-[260px]">
@@ -85,7 +85,7 @@ const SideBar: FC<SideBarProps> = ({}) => {
                       </div>
                     </div>
                     <div className="relative -top-px grow -space-y-px truncate text-start text-token-text-primary">
-                      <div dir="auto">子璇 周</div>
+                      <div dir="auto">User Name</div>
                     </div>
                   </button>
                 </div>

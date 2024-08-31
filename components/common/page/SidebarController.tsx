@@ -1,10 +1,10 @@
 "use client";
 import { FC } from "react";
-import BootstrapTooltip from "../ui/BootstrapTooltip";
-import { IconButton, TooltipProps } from "@mui/material";
+import { TooltipProps } from '@mui/joy';
 import { useAppContext } from "../../AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
 import { cn } from "@/lib/utils";
+import CustomTooltip from "../ui/CustomTooltip";
 
 interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Pick<TooltipProps, "placement"> {
   title: string;
@@ -16,10 +16,8 @@ const SidebarControler: FC<SidebarControlerProps> = ({ className, title, placeme
     dispatch,
   } = useAppContext();
   return (
-    <BootstrapTooltip title={title} placement={placement} >
-      <IconButton
-        aria-label="delete"
-        size="large"
+    <CustomTooltip title={title} placement="right" >
+      <button
         className={cn("h-10 rounded-lg px-2 text-token-text-secondary focus-visible:outline-0", className)}
         onClick={() => dispatch({ type: ActionType.UPDATE, field: "isSidebarOpen", value: !isSidebarOpen })}
       >
@@ -31,8 +29,8 @@ const SidebarControler: FC<SidebarControlerProps> = ({ className, title, placeme
             clipRule="evenodd"
           ></path>
         </svg>
-      </IconButton>
-    </BootstrapTooltip>
+      </button>
+    </CustomTooltip>
   );
 };
 
