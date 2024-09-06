@@ -4,7 +4,7 @@ import "@/styles/globals.css";
 import { AppContextProvider } from "@/components/AppContextProvider";
 import SideBar from "@/components/sidebar/Sidebar";
 import { EventBusContextProvider } from "@/components/EventBusContext";
-import ThemeRegistry from "@/components/theme/ThemeRegistry";
+import { ThemeProvider } from "@/components/ThemeProvide";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,22 +18,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
-    <html lang="en" className="dark" dir="ltr">
-      <AppContextProvider>
-        <EventBusContextProvider>
-          <body className={inter.className}>
-            <ThemeRegistry>
+    <html lang="en" suppressHydrationWarning dir="ltr">
+      <body className={inter.className}>
+        <AppContextProvider>
+          <EventBusContextProvider>
+            <ThemeProvider attribute="class" defaultTheme="system">
               <div className="relative z-0 flex h-full w-full overflow-hidden">
                 <SideBar />
                 <div className="relative flex h-full max-w-full flex-1 flex-col overflow-hidden">
                   <main className="relative h-full w-full flex-1 overflow-auto transition-width">{children}</main>
                 </div>
               </div>
-            </ThemeRegistry>
-          </body>
-        </EventBusContextProvider>
-      </AppContextProvider>
+            </ThemeProvider>
+          </EventBusContextProvider>
+        </AppContextProvider>
+      </body>
     </html>
   );
 }

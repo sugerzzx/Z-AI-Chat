@@ -13,7 +13,7 @@ const MsgAndExamContainer: FC<MsgAndExamContainerProps> = ({ children, conversat
         <div className="flex-1 overflow-hidden">{children}</div>
         <MsgInput conversationId={conversationId} />
       </div>
-      <div className="group fixed bottom-3 end-3 z-10 hidden gap-1 juice:bottom-2 juice:end-2 md:flex juice:lg:bottom-3 juice:lg:end-3">
+      <div className="group fixed z-10 hidden gap-1 bottom-2 end-2 md:flex lg:bottom-3 lg:end-3">
         <button
           className="flex h-6 w-6 items-center justify-center rounded-full border border-token-border-light text-xs text-token-text-secondary"
           type="button"

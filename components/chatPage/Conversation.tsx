@@ -1,5 +1,5 @@
 import { FC } from "react";
-import PageHeader from "../common/page/PageHeader";
+import PageHeader from "../page/PageHeader";
 import MsgList from "./MsgList";
 
 interface ConversationProps {

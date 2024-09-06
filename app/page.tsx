@@ -1,11 +1,12 @@
 "use client";
-import MsgAndExamContainer from "@/components/common/page/MsgAndExamContainer";
+import MsgAndExamContainer from "@/components/page/MsgAndExamContainer";
 import ExampleComp from "@/components/example/ExampleComp";
 import { useEffect, useState } from "react";
 import { useEventBusContext } from "@/components/EventBusContext";
 import Conversation from "@/components/chatPage/Conversation";
 import { useAppContext } from "@/components/AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
+import { Event } from "@/constant/event.event";
 
 export default function Home() {
   const { dispatch } = useAppContext();
@@ -17,9 +18,9 @@ export default function Home() {
       dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] });
       setIsConversation(true);
     };
-    subscribe("newConversation", callback);
+    subscribe(Event.NewConversation, callback);
     return () => {
-      unsubscribe("newConversation", callback);
+      unsubscribe(Event.NewConversation, callback);
     };
   }, []);
 

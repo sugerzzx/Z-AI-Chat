@@ -20,7 +20,7 @@ interface EventBusContextProviderProps {
 }
 
 export const EventBusContextProvider: FC<EventBusContextProviderProps> = ({ children }) => {
-  const [listeners, setListeners] = useState<{ [key: string]: EventListener[] }>({});
+  const [listeners, setListeners] = useState<{ [key: string]: EventListener[]; }>({});
 
   const subscribe = useCallback(
     (eventName: string, callback: EventListener) => {

@@ -1,24 +1,24 @@
 "use client";
 import { FC } from "react";
-import { TooltipProps } from '@mui/joy';
-import { useAppContext } from "../../AppContextProvider";
+import { useAppContext } from "../AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
 import { cn } from "@/lib/utils";
-import CustomTooltip from "../ui/CustomTooltip";
+import ArrowTooltip, { ArrowTooltipProps } from "@/components/ui/ArrowTooltip";
+import { Button } from "@/components/ui/Button";
 
-interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Pick<TooltipProps, "placement"> {
+interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Pick<ArrowTooltipProps, "side"> {
   title: string;
 }
 
-const SidebarControler: FC<SidebarControlerProps> = ({ className, title, placement }) => {
+const SidebarControler: FC<SidebarControlerProps> = ({ title, side }) => {
   const {
     state: { isSidebarOpen },
     dispatch,
   } = useAppContext();
   return (
-    <CustomTooltip title={title} placement="right" >
-      <button
-        className={cn("h-10 rounded-lg px-2 text-token-text-secondary focus-visible:outline-0", className)}
+    <ArrowTooltip title={title} side={side}>
+      <Button variant="ghost"
+        size='icon'
         onClick={() => dispatch({ type: ActionType.UPDATE, field: "isSidebarOpen", value: !isSidebarOpen })}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" className="icon-xl-heavy">
@@ -29,8 +29,8 @@ const SidebarControler: FC<SidebarControlerProps> = ({ className, title, placeme
             clipRule="evenodd"
           ></path>
         </svg>
-      </button>
-    </CustomTooltip>
+      </Button>
+    </ArrowTooltip>
   );
 };
 

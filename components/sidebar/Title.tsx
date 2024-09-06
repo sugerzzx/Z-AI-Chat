@@ -1,13 +1,16 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { FC, memo, useState, forwardRef } from 'react';
-import Dropdown from '@mui/joy/Dropdown';
-import Menu from '@mui/joy/Menu';
-import MenuButton from '@mui/joy/MenuButton';
-import MenuItem, { MenuItemProps } from '@mui/joy/MenuItem';
-import { ButtonProps } from '@mui/joy';
-import CustomTooltip from '../common/ui/CustomTooltip';
-
+import { FC, memo, useState } from 'react';
+import { Button } from '../ui/Button';
+import { Input } from '../ui/Input';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/DropdownMenu";
+import { Ellipsis } from 'lucide-react';
+import ArrowTooltip from '../ui/ArrowTooltip';
 interface TitleProps {
   id: string;
   title: string;
@@ -16,51 +19,48 @@ interface TitleProps {
 
 const Title: FC<TitleProps> = ({ id, title, isCurrent }) => {
   const [isOpen, steIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+
   return <li className="relative" style={{ opacity: 1, height: "auto" }}>
-    <div className={cn("group relative rounded-lg active:opacity-90 ", isCurrent ? 'bg-token-sidebar-surface-secondary' : 'hover:bg-token-sidebar-surface-secondary')}>
-      <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">
-        <div className="relative grow overflow-hidden whitespace-nowrap" dir="auto">
-          {title}
-          <div className={cn("absolute bottom-0 top-0 to-transparent ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r", isCurrent ? 'from-token-sidebar-surface-secondary w-10 from-60%' : 'from-token-sidebar-surface-primary from-token-sidebar-surface-primary can-hover:group-hover:from-token-sidebar-surface-secondary w-8 from-0% can-hover:group-hover:w-10 can-hover:group-hover:from-60%')}></div>
-        </div>
-      </Link>
-      <CustomTooltip title="选项" arrow placement="top">
-        <div className={cn("absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0", isCurrent || isOpen ? 'flex' : 'hidden can-hover:group-hover:flex')}>
-          <span data-state="closed">
-            <Dropdown onOpenChange={() => steIsOpen(!isOpen)}>
-              <MenuButton component={CustomMenuButton}  >
-              </MenuButton>
-              <Menu placement='bottom-start'>
-                <MenuItem component={CustomMenuItem}>重命名</MenuItem>
-                <MenuItem component={CustomMenuItem}>删除</MenuItem>
-              </Menu>
-            </Dropdown>
-          </span>
-        </div>
-      </CustomTooltip>
+    <div className={cn("group relative rounded-lg active:opacity-90", isCurrent || isOpen ? 'bg-secondary' : 'hover:bg-secondary')}>
+      {
+        isEdit ?
+          <div className='p-2'>
+            <Input defaultValue={title} onBlur={() => setIsEdit(false)} autoFocus={true} className='h-auto p-0 focus:border focus:border-chart-2 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none' />
+          </div>
+          : <>
+            <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">
+              <div className="relative grow overflow-hidden whitespace-nowrap" dir="auto">
+                {title}
+              </div>
+            </Link>
+            <div className={cn("absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0", isCurrent || isOpen ? 'flex' : 'hidden group-hover:flex')}>
+              <DropdownMenu onOpenChange={(newVal) => {
+                steIsOpen(newVal);
+              }}>
+                <DropdownMenuTrigger asChild>
+                  <Button variant={'ghost'} size={'icon'} className='flex items-center justify-center text-muted-foreground transition hover:text-foreground focus-visible:ring-0'>
+                    <ArrowTooltip title="选项" side="top">
+                      <Ellipsis size={20} />
+                    </ArrowTooltip>
+                  </Button>
+                </DropdownMenuTrigger>
+                {
+                  isOpen ? <DropdownMenuContent align="start">
+                    <DropdownMenuItem className='cursor-pointer' onClick={() => setTimeout(() => setIsEdit(true))}>
+                      编辑
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className='cursor-pointer text-destructive data-[highlighted]:text-destructive'>
+                      删除
+                    </DropdownMenuItem>
+                  </DropdownMenuContent> : <></>
+                }
+              </DropdownMenu>
+            </div>
+          </>
+      }
     </div>
   </li>;
 };
 
 export default memo(Title);
-
-const CustomMenuButton = forwardRef<HTMLButtonElement, ButtonProps>(function Button(props, ref) {
-  const { className, ...other } = props;
-  return <button ref={ref} className='flex items-center justify-center text-token-text-secondary transition hover:text-token-text-primary radix-state-open:text-token-text-secondary' {...other}>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" className="icon-md">
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M3 12a2 2 0 1 1 4 0 2 2 0 0 1-4 0m7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0m7 0a2 2 0 1 1 4 0 2 2 0 0 1-4 0"
-        clipRule="evenodd"
-      ></path>
-    </svg>
-  </button>;
-});
-
-const CustomMenuItem = forwardRef<HTMLDivElement, MenuItemProps>(function Button(props, ref) {
-  const { className, children, ...other } = props;
-  return <div ref={ref} className='p-3 mx-2 hover:bg-[var(--main-surface-secondary)] text-[var(--text-primary)] rounded-md cursor-pointer' {...other}>
-    {children}
-  </div>;
-});

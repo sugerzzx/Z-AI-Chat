@@ -5,6 +5,7 @@ import { FC, useEffect, useMemo, useState } from "react";
 import { useEventBusContext } from "../EventBusContext";
 import Title from "./Title";
 import { usePathname } from "next/navigation";
+import { Event } from "@/constant/event.event";
 
 interface ChatHistoryProps { }
 
@@ -25,23 +26,23 @@ const ChatHistory: FC<ChatHistoryProps> = ({ }) => {
   }, []);
 
   useEffect(() => {
-    const callback = (conversationId: string) => {
+    const callback = ({ conversationId, title }: { conversationId: string, title: string; }) => {
       setChatList((prev) => {
-        return [...prev, { id: conversationId, title: "New Chat", updateTime: Date.now() }];
+        return [...prev, { id: conversationId, title, updateTime: Date.now() }];
       });
     };
-    subscribe("updateConversationTitle", callback);
+    subscribe(Event.UpdateConversationTitle, callback);
     return () => {
-      unsubscribe("updateConversationTitle", callback);
+      unsubscribe(Event.UpdateConversationTitle, callback);
     };
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm juice:mt-5">
+    <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm mt-5">
       <div>
         {historyList.map(([date, chatList]) => (
-          <div key={date} className="relative mt-5 empty:mt-0 empty:hidden juice:first:mt-0 juice:last:mb-5" style={{ height: "auto", opacity: 1 }}>
-            <div className="juice:sticky juice:top-0 juice:z-20 juice:bg-token-sidebar-surface-primary">
+          <div key={date} className="relative mt-5 empty:mt-0 empty:hidden first:mt-0 last:mb-5" style={{ height: "auto", opacity: 1 }}>
+            <div className="sticky top-0 z-20 bg-background">
               <span className="flex h-9 items-center">
                 <h3 className="pb-2 pt-3 px-2 text-xs font-semibold text-ellipsis overflow-hidden break-all text-token-text-secondary">{date}</h3>
               </span>

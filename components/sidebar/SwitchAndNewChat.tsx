@@ -1,14 +1,14 @@
 import { FC } from "react";
-import SidebarControler from "../common/page/SidebarController";
-import NewChatBtn from "../common/page/NewChatBtn";
+import SidebarControler from "../page/SidebarController";
+import NewChatBtn from "../page/NewChatBtn";
 
 interface SwitchAndNewChatProps { }
 
 const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({ }) => {
   return (
     <div className="flex justify-between h-14 items-center">
-      <SidebarControler className="hover:bg-token-sidebar-surface-secondary focus-visible:bg-token-sidebar-surface-secondary" title="关闭边栏" placement="right" />
-      <NewChatBtn className="hover:bg-token-sidebar-surface-secondary focus-visible:bg-token-sidebar-surface-secondary" />
+      <SidebarControler title="关闭边栏" side="right" />
+      <NewChatBtn />
     </div>
   );
 };

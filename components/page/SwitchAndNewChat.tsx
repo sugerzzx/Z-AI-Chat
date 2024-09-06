@@ -1,6 +1,6 @@
 "use client";
 import { FC } from "react";
-import { useAppContext } from "../../AppContextProvider";
+import { useAppContext } from "../AppContextProvider";
 import SidebarControler from "./SidebarController";
 import NewChatBtn from "./NewChatBtn";
 
@@ -11,11 +11,11 @@ const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({ }) => {
     state: { isSidebarOpen },
   } = useAppContext();
   return isSidebarOpen ? (
-    <></>
+    <div></div>
   ) : (
-    <div className="flex items-center">
-      <SidebarControler className="hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary" title="打开边栏" />
-      <NewChatBtn className="hover:bg-token-main-surface-secondary focus-visible:bg-token-main-surface-secondary" />
+    <div className="flex items-center gap-2">
+      <SidebarControler title="打开边栏" side="bottom" />
+      <NewChatBtn />
     </div>
   );
 };
