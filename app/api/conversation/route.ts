@@ -91,7 +91,11 @@ async function createUserMessage(payload: ConversationPayload) {
       },
     });
   } else {
-    const newConversation = await prisma.conversation.create({ data: {} });
+    const newConversation = await prisma.conversation.create({
+      data: {
+        title: content,
+      }
+    });
     const newRootMessage = await prisma.message.create({
       data: {
         role: Role.SYSTEM,
