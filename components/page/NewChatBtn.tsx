@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/Button";
 
 interface NewChatBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> { }
 
-const NewChatBtn: FC<NewChatBtnProps> = ({ className }) => {
+const NewChatBtn: FC<NewChatBtnProps> = () => {
   return (
     <ArrowTooltip title="新聊天" side='bottom'>
       <Button variant="ghost" size='icon'>
