@@ -61,4 +61,5 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
   </li>;
 });
 
+Title.displayName = "Title";
 export default memo(Title);
