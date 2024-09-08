@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { FC, memo, useState } from 'react';
+import { forwardRef, memo, useState } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import {
@@ -17,18 +17,20 @@ interface TitleProps {
   isCurrent: boolean;
 }
 
-const Title: FC<TitleProps> = ({ id, title, isCurrent }) => {
+const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const isActive = isCurrent || isOpen;
 
-  return <li className="relative h-auto">
-    <div className={cn("group relative rounded-lg active:opacity-90", isCurrent || isOpen ? 'bg-secondary' : 'hover:bg-secondary')}>
+  return <li className="relative h-auto" ref={ref}>
+    <div className={cn("group relative rounded-lg active:opacity-90", isActive ? 'bg-secondary' : 'hover:bg-secondary')}>
       <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">
         <div className="relative grow overflow-hidden whitespace-nowrap" dir="auto">
           {title}
+          <div className={cn("absolute bottom-0 top-0 to-transparent ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r w-10 ", isActive ? "from-[hsl(var(--secondary))] from-50%" : "from-[hsl(var(--background))] from-20% group-hover:from-[hsl(var(--secondary))] group-hover:from-50%")}></div>
         </div>
       </Link>
-      <div className={cn("absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0", isCurrent || isOpen ? 'flex' : 'hidden group-hover:flex', isEdit && 'flex left-0')}>
+      <div className={cn("absolute bottom-0 top-0 items-center gap-1.5 pr-2 ltr:right-0 rtl:left-0", isActive ? 'flex' : 'hidden group-hover:flex', isEdit && 'flex left-0')}>
         {
           isEdit ?
             <div className='absolute bottom-0 left-[7px] right-2 top-0 flex items-center'>
@@ -37,7 +39,7 @@ const Title: FC<TitleProps> = ({ id, title, isCurrent }) => {
             :
             <DropdownMenu onOpenChange={(newVal) => setIsOpen(newVal)}>
               <DropdownMenuTrigger asChild>
-                <Button variant={'ghost'} size={'icon'} className='flex items-center justify-center text-muted-foreground transition hover:text-foreground focus-visible:ring-0'>
+                <Button variant={'ghost'} size={'icon'} className='hover:bg-transparent absolute ltr:right-0 rtl:left-0 flex items-center justify-center text-muted-foreground transition hover:text-foreground focus-visible:ring-0'>
                   <ArrowTooltip title="选项" side="top">
                     <Ellipsis size={20} />
                   </ArrowTooltip>
@@ -57,6 +59,6 @@ const Title: FC<TitleProps> = ({ id, title, isCurrent }) => {
       </div>
     </div>
   </li>;
-};
+});
 
 export default memo(Title);
