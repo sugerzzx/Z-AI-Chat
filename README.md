@@ -1,13 +1,13 @@
 # Z-AI-Chat
 
-此项目是一个全栈 AI 聊天应用，项目使用`next.js` 和 `prisma`，使用 `GoogleGenerativeAI` 生成对话:
+此项目是一个全栈 AI 聊天应用，项目使用`next.js` 和 `prisma`构建，使用 [Gemini API](https://ai.google.dev/gemini-api/docs/api-key) 生成对话:
 
 - `Next.js`
 - `Prisma`
 - `TailwindCSS`
 - `ReactQuery`
 - `Radix UI`
-- `GoogleGenerativeAI`
+- `Generative-ai-js`
 
 ![sample](./docs/sample.png)
 
