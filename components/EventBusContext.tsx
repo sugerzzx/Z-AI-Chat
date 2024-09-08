@@ -1,5 +1,5 @@
 "use client";
-import { createContext, Dispatch, FC, ReactNode, useCallback, useContext, useMemo, useReducer, useState } from "react";
+import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useRef } from "react";
 
 export type EventListener = (data: any) => void;
 
@@ -20,37 +20,26 @@ interface EventBusContextProviderProps {
 }
 
 export const EventBusContextProvider: FC<EventBusContextProviderProps> = ({ children }) => {
-  const [listeners, setListeners] = useState<{ [key: string]: EventListener[]; }>({});
+  const listenersRef = useRef<{ [key: string]: EventListener[]; }>({});
 
-  const subscribe = useCallback(
-    (eventName: string, callback: EventListener) => {
-      if (!listeners[eventName]) {
-        listeners[eventName] = [];
-      }
-      listeners[eventName].push(callback);
-      setListeners({ ...listeners });
-    },
-    [listeners]
-  );
+  const subscribe = useCallback((eventName: string, callback: EventListener) => {
+    if (!listenersRef.current[eventName]) {
+      listenersRef.current[eventName] = [];
+    }
+    listenersRef.current[eventName].push(callback);
+  }, []);
 
-  const unsubscribe = useCallback(
-    (eventName: string, callback: EventListener) => {
-      if (listeners[eventName]) {
-        listeners[eventName] = listeners[eventName].filter(cb => cb !== callback);
-        setListeners({ ...listeners });
-      }
-    },
-    [listeners]
-  );
+  const unsubscribe = useCallback((eventName: string, callback: EventListener) => {
+    if (listenersRef.current[eventName]) {
+      listenersRef.current[eventName] = listenersRef.current[eventName].filter(cb => cb !== callback);
+    }
+  }, []);
 
-  const publish = useCallback(
-    (eventName: string, data?: any) => {
-      if (listeners[eventName]) {
-        listeners[eventName].forEach(cb => cb(data));
-      }
-    },
-    [listeners]
-  );
+  const publish = useCallback((eventName: string, data?: any) => {
+    if (listenersRef.current[eventName]) {
+      listenersRef.current[eventName].forEach(cb => cb(data));
+    }
+  }, []);
 
   const contextValue = useMemo(() => ({ subscribe, unsubscribe, publish }), [subscribe, unsubscribe, publish]);
 

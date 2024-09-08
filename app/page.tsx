@@ -22,7 +22,7 @@ export default function Home() {
     return () => {
       unsubscribe(Event.NewConversation, callback);
     };
-  }, []);
+  }, [dispatch, subscribe, unsubscribe]);
 
   return <MsgAndExamContainer>
     {isConversation ? <Conversation /> : <ExampleComp />}

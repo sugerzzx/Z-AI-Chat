@@ -1,5 +1,5 @@
 "use client";
-import { FC, useEffect } from "react";
+import { FC, useCallback, useEffect } from "react";
 import UserMessage from "./UserMessage";
 import AssistantMessage from "./AssistantMessage";
 import { useAppContext } from "../AppContextProvider";
@@ -27,6 +27,19 @@ const MsgList: FC<MsgListProps> = ({ conversationId }) => {
     return await response.json();
   };
 
+  const handleConversation = useCallback((conversation: ConversationWithMapping) => {
+    const currentNode = conversation.currentNode!;
+    const lastMessage = conversation.mapping[currentNode];
+    const messageList: MessageWithChildren[] = [lastMessage];
+    let parentId = lastMessage.parent;
+    while (parentId) {
+      const parentMessage = conversation.mapping[parentId];
+      messageList.unshift(parentMessage);
+      parentId = parentMessage.parent;
+    }
+    dispatch({ type: ActionType.UPDATE, field: "messageList", value: messageList });
+  }, [dispatch]);
+
   useEffect(() => {
     conversationId &&
       fetchConversation(conversationId)
@@ -41,20 +54,7 @@ const MsgList: FC<MsgListProps> = ({ conversationId }) => {
         });
     return () => {
     };
-  }, [conversationId]);
-
-  const handleConversation = (conversation: ConversationWithMapping) => {
-    const currentNode = conversation.currentNode!;
-    const lastMessage = conversation.mapping[currentNode];
-    const messageList: MessageWithChildren[] = [lastMessage];
-    let parentId = lastMessage.parent;
-    while (parentId) {
-      const parentMessage = conversation.mapping[parentId];
-      messageList.unshift(parentMessage);
-      parentId = parentMessage.parent;
-    }
-    dispatch({ type: ActionType.UPDATE, field: "messageList", value: messageList });
-  };
+  }, [conversationId, handleConversation]);
 
   return (
     <>

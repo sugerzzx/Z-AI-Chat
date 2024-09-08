@@ -52,7 +52,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({ }) => {
     });
     observer.observe(lastTitle.current!);
   };
-  useEffect(observeLastTitle, [data]);
+  useEffect(observeLastTitle, [data, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
     const callback = () => {
@@ -62,7 +62,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({ }) => {
     return () => {
       unsubscribe(Event.UpdateConversationTitle, callback);
     };
-  }, []);
+  }, [refetch, subscribe, unsubscribe]);
 
   const historyList = useMemo(() => data && groupByDate(data.pages.map((page) => page.items).flat()), [data]);
 
