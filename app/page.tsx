@@ -14,7 +14,7 @@ export default function Home() {
   const [isConversation, setIsConversation] = useState<boolean>(false);
 
   useEffect(() => {
-    const callback = (conversationId: string) => {
+    const callback = () => {
       dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] });
       setIsConversation(true);
     };

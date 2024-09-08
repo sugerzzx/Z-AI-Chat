@@ -59,15 +59,21 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     const payload: ConversationPayload = {
       action: ConversationAction.NEXT,
       messages: [message],
-      parentMessageId: parentMessage?.id || uuid(),
-      conversationId: conversationId,
+      parentMessageId: parentMessage?.id ?? '',
+      conversationId,
       model: ModelType.AUTO,
     };
 
-    isNewConversation && publish(Event.NewConversation, payload.conversationId);
+    // 如果为新对话，发布Event.NewConversation
+    isNewConversation && publish(Event.NewConversation);
+
+    // 如果有父消息，更新父消息的children
     parentMessage && dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, message.id] } });
+
+    // 构造添加的新消息
     const newMessage = { ...message, conversationId, parent: payload.parentMessageId, children: [] };
     dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
+
     setUserInput("");
     doSend(payload);
   };
@@ -81,23 +87,34 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       payload: JSON.stringify(payload),
     });
 
-    const getMessage = (data: string): MessageWithChildren => {
-      const message: ReplaceFieldType<Message, "createTime", string> = JSON.parse(data);
-      return { ...message, createTime: Date.parse(message.createTime), children: [] };
+    const parseMessage = (data: string): MessageWithChildren => {
+      try {
+        const message: ReplaceFieldType<Message, "createTime", string> = JSON.parse(data);
+        return { ...message, createTime: Date.parse(message.createTime), children: [] };
+      }
+      catch (e) {
+        console.log(e);
+        return { id: '', content: '', role: '', conversationId: '', parent: '', children: [], createTime: 0 };
+      }
     };
 
-    let newConversationId = '';
+    let newMessage: MessageWithChildren;
     source.addEventListener("start", (event: MessageEvent) => {
       setIsGenerating(true);
-      const newMessage = getMessage(event.data);
-      newConversationId = newMessage.conversationId;
-      const message = payload.messages[0];
-      const parentMessage = { ...message, conversationId, parent: payload.parentMessageId, children: [] };
+
+      newMessage = parseMessage(event.data);
+
+      const message = payload.messages[0]; // 原消息
+      const parentMessage: MessageWithChildren = { ...message, conversationId, parent: payload.parentMessageId, children: [] }; //  新消息的父消息
+
+      // 更新父消息的children
       dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, newMessage.id] } });
+
+      // 将新的消息添加到消息列表
       dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
-      if (isNewConversation) {
-        publish(Event.UpdateConversationTitle, { conversationId: newMessage.conversationId, title: payload.messages[0].content });
-      }
+
+      // 如果为新对话，更新对话标题
+      isNewConversation && publish(Event.UpdateConversationTitle);
     });
 
     source.addEventListener("message", (event: MessageEvent) => {
@@ -107,12 +124,12 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
         source.close();
         return;
       }
-      dispatch({ type: ActionType.UPDATE_MESSAGE, message: getMessage(event.data) });
+      dispatch({ type: ActionType.UPDATE_MESSAGE, message: parseMessage(event.data) });
     });
 
     source.addEventListener("end", () => {
       setIsGenerating(false);
-      !conversationId && router.push(`/c/${newConversationId}`);
+      isNewConversation && router.push(`/c/${newMessage.conversationId}`);
     });
   };
 
@@ -132,6 +149,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     });
     isStop.current = true;
   };
+
   return (
     <div className="text-base px-3 m-auto w-full md:px-5 lg:px-1 xl:px-5">
       <div className="mx-auto flex flex-1 gap-4 text-base md:gap-5 lg:gap-6 md:max-w-3xl lg:max-w-[40rem] xl:max-w-[48rem]">
