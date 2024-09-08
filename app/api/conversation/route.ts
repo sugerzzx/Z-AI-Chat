@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { setGlobalDispatcher, ProxyAgent } from "undici";
 import EventEmitter from "events";
 import prisma from "@/lib/db";
@@ -30,22 +30,22 @@ export async function POST(request: NextRequest) {
       try {
         userMessage = await createUserMessage(payload);
       } catch (error) {
-        return { status: -1, body: `Error creating user message: ${error}` };
+        return NextResponse.json({ status: -1, body: `Error creating user message: ${error}` });
       }
       break;
     case ConversationAction.VARIANT:
       try {
         userMessage = await findMessage(payload.parentMessageId);
       } catch (error) {
-        return { status: -1, body: `Error finding message: ${error}` };
+        return NextResponse.json({ status: -1, body: `Error finding message: ${error}` });
       }
       break;
     default:
-      return { status: -1, body: "Invalid action" };
+      return NextResponse.json({ status: -1, body: "Invalid action" });
   }
 
   if (!userMessage) {
-    return { status: -1, body: "Message not found" };
+    return NextResponse.json({ status: -1, body: "Message not found" });
   }
 
   const assistantMessage = await prisma.message.create({
