@@ -42,7 +42,7 @@ MOCK_MESSAGE="Hello, World!" # 模拟消息，用于调试，配置此项时，�
 
 ### 设置数据库
 
-支持 splite、postgresql
+支持 sqlite、postgresql
 
 ```prisma
 datasource db {
