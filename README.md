@@ -31,7 +31,7 @@ cp .env.example .env
 
 ```bash
 # .env
-DATABASE_URL="file:./dev.db" # 数据库连接地址，可以保持默认
+DATABASE_URL="" # 数据库连接地址，使用 sqlite 时，可以设置为 file:./dev.db
 
 GOOGLE_GEN_API_KEY="Your Google API Key" # 确保使用可用的 Google API Key
 
@@ -41,6 +41,15 @@ MOCK_MESSAGE="Hello, World!" # 模拟消息，用于调试，配置此项时，�
 ```
 
 ### 设置数据库
+
+支持 splite、postgresql
+
+```prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL") // uses connection pooling
+}
+```
 
 ```bash
 npx prisma db push
@@ -64,7 +73,9 @@ yarn dev
 
 - [ ] 对话的编辑、重新生成和内容复制
 
-- [ ] 消息界面的 Markdown 区域样式优化
+- [ ] 消息页面滚动优化和 Markdown 区域样式优化
+
+- [x] 部署到 Vercel
 
 - [ ] 更多的对话生成模型
 
