@@ -9,7 +9,7 @@ type MessageWithChildrenNodes = Message & {
   }[];
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string; }; }) {
   const id = params.id;
 
   if (!id) {
@@ -70,18 +70,21 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string; }; }) {
   const id = params.id;
 
   if (!id) {
     return NextResponse.json({ error: "No conversation id found" }, { status: 500 });
   }
 
-  const conversation = await prisma.conversation.delete({
-    where: {
-      id,
-    },
-  });
-
-  return NextResponse.json({ success: true });
+  try {
+    await prisma.conversation.delete({
+      where: {
+        id,
+      },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 });
+  }
 }
