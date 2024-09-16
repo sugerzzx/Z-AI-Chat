@@ -13,7 +13,7 @@ const AssistantMessage: FC<AssistantMessageProps> = ({ content = "" }) => {
         <div>
           <div className="pt-0">
             <div className="gizmo-bot-avatar flex h-8 w-8 items-center justify-center overflow-hidden rounded-full">
-              <div className="relative p-1 rounded-sm flex items-center justify-center bg-token-main-surface-primary text-token-text-primary h-8 w-8">
+              <div className="relative p-1 rounded-sm flex items-center justify-center h-8 w-8">
                 <BotMessageSquare />
               </div>
             </div>

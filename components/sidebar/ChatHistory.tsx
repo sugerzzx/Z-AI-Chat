@@ -70,7 +70,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({ }) => {
   if (status === 'error' || !historyList) return <div>Error loading titles</div>;
 
   return (
-    <div className="flex flex-col gap-2 pb-2 text-token-text-primary text-sm mt-5">
+    <div className="flex flex-col gap-2 pb-2  text-sm mt-5">
       <div>
         {historyList.map(([date, chatList]) => (
           <div key={date} className="relative mt-5 empty:mt-0 empty:hidden first:mt-0 last:mb-5" style={{ height: "auto", opacity: 1 }}>

@@ -159,7 +159,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
               <div className="flex items-end gap-1.5 md:gap-2">
                 <div className="flex flex-col">
                   <button
-                    className="flex items-center justify-center text-token-text-primary h-8 w-8 dark:text-white rounded-full focus-visible:outline-black dark:focus-visible:outline-white mb-1 ml-1.5"
+                    className="flex items-center justify-center h-8 w-8 dark:text-white rounded-full focus-visible:outline-black dark:focus-visible:outline-white mb-1 ml-1.5"
                     aria-disabled="false"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

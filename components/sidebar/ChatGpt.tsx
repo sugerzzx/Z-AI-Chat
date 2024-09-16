@@ -11,11 +11,11 @@ const ChatGpt: FC<ChatGptProps> = ({ }) => {
     <ClickTrans>
       <Link href="/" className="group flex h-10 items-center gap-4 rounded-lg bg-token-sidebar-surface-primary px-2 font-semibold hover:bg-accent">
         <div className="h-6 w-6 flex-shrink-0">
-          <div className="gizmo-shadow-stroke relative flex h-full items-center justify-center rounded-full bg-token-main-surface-primary text-token-text-primary">
+          <div className="gizmo-shadow-stroke relative flex h-full items-center justify-center rounded-full">
             <MessagesSquare size={18} />
           </div>
         </div>
-        <div className="grow overflow-hidden text-ellipsis whitespace-nowrap text-sm text-token-text-primary">New Chat</div>
+        <div className="grow overflow-hidden text-ellipsis whitespace-nowrap text-sm">New Chat</div>
         <div>
           <span className="flex items-center" data-state="closed">
             <Button variant={"ghost"} size={"icon"} className="invisible text-muted-foreground group-hover:visible">
