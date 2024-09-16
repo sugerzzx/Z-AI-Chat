@@ -1,0 +1,62 @@
+diff --git a/node_modules/@google/generative-ai/dist/generative-ai.d.ts b/node_modules/@google/generative-ai/dist/generative-ai.d.ts
+index 61db86b..41e2205 100644
+--- a/node_modules/@google/generative-ai/dist/generative-ai.d.ts
++++ b/node_modules/@google/generative-ai/dist/generative-ai.d.ts
+@@ -977,6 +977,10 @@ export declare interface SingleRequestOptions extends RequestOptions {
+      * be charged usage for any applicable operations.
+      */
+     signal?: AbortSignal;
++    /**
++     * Custom Distacher for the request.
++     */
++    dispatcher?: RequestInit["dispatcher"];
+ }
+ 
+ /**
+diff --git a/node_modules/@google/generative-ai/dist/index.mjs b/node_modules/@google/generative-ai/dist/index.mjs
+index b658b34..0bb6d04 100644
+--- a/node_modules/@google/generative-ai/dist/index.mjs
++++ b/node_modules/@google/generative-ai/dist/index.mjs
+@@ -407,19 +407,20 @@ async function handleResponseNotOk(response, url) {
+  */
+ function buildFetchOptions(requestOptions) {
+     const fetchOptions = {};
+-    if ((requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.signal) !== undefined || (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.timeout) >= 0) {
++    const { signal } = requestOptions, otherOptions = __rest(requestOptions, ["signal"]);
++    if (signal !== undefined || (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.timeout) >= 0) {
+         const controller = new AbortController();
+         if ((requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.timeout) >= 0) {
+             setTimeout(() => controller.abort(), requestOptions.timeout);
+         }
+-        if (requestOptions === null || requestOptions === void 0 ? void 0 : requestOptions.signal) {
++        if (signal) {
+             requestOptions.signal.addEventListener("abort", () => {
+                 controller.abort();
+             });
+         }
+         fetchOptions.signal = controller.signal;
+     }
+-    return fetchOptions;
++    return Object.assign(Object.assign({}, fetchOptions), otherOptions);
+ }
+ 
+ /**
+@@ -602,6 +603,18 @@ PERFORMANCE OF THIS SOFTWARE.
+ /* global Reflect, Promise, SuppressedError, Symbol */
+ 
+ 
++function __rest(s, e) {
++    var t = {};
++    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
++        t[p] = s[p];
++    if (s != null && typeof Object.getOwnPropertySymbols === "function")
++        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
++            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
++                t[p[i]] = s[p[i]];
++        }
++    return t;
++}
++
+ function __await(v) {
+     return this instanceof __await ? (this.v = v, this) : new __await(v);
+ }
