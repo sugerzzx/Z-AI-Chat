@@ -7,7 +7,7 @@ import { useAppContext } from "@/components/AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
 import { Message } from "@prisma/client";
 import { ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
-import { Event } from "@/constant/event.event";
+import { Event } from "@/constant/event.enum";
 import { ConversationPayload, MessageWithChildren, PayloadMessage } from "@/types/conversation";
 import { ReplaceFieldType } from "@/types/typeUtils";
 import { useEventBusContext } from "@/components/EventBusContext";

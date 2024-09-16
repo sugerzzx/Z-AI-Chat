@@ -5,7 +5,7 @@ import { FC, useEffect, useMemo, useRef } from "react";
 import { useEventBusContext } from "../EventBusContext";
 import Title from "./Title";
 import { usePathname } from "next/navigation";
-import { Event } from "@/constant/event.event";
+import { Event } from "@/constant/event.enum";
 import { Loader } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 

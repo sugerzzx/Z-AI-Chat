@@ -6,7 +6,7 @@ import { useEventBusContext } from "@/components/EventBusContext";
 import Conversation from "@/components/chatPage/Conversation";
 import { useAppContext } from "@/components/AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
-import { Event } from "@/constant/event.event";
+import { Event } from "@/constant/event.enum";
 
 export default function Home() {
   const { dispatch } = useAppContext();
