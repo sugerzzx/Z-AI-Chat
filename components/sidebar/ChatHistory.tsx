@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import { Event } from "@/constant/event.enum";
 import { Loader } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { QueryKey } from "@/constant/queryKey.enum";
 
 interface ChatHistoryProps {}
 
@@ -22,7 +23,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status, refetch } =
     useInfiniteQuery({
-      queryKey: ["conversations"],
+      queryKey: [QueryKey.Conversations],
       queryFn: fetchConversations,
       initialPageParam: 0,
       getNextPageParam: (lastPage) => {

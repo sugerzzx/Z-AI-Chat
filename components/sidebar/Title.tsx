@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/DropdownMenu";
 import { Ellipsis } from "lucide-react";
 import ArrowTooltip from "../ui/ArrowTooltip";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { QueryKey } from "@/constant/queryKey.enum";
+
 interface TitleProps {
   id: string;
   title: string;
@@ -21,6 +24,28 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const isActive = isCurrent || isOpen;
+  const queryClient = useQueryClient();
+
+  const deleteConversation = async () => {
+    const res = await fetch(`/api/conversation/${id}`, {
+      method: "DELETE",
+    });
+    if (!res.ok) {
+      throw new Error("Failed to delete conversation");
+    }
+    return res.json();
+  };
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteConversation,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Conversations] });
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
+  };
 
   return (
     <li className="relative h-auto" ref={ref}>
@@ -81,7 +106,10 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
                   <DropdownMenuItem className="cursor-pointer" onClick={() => setIsEdit(true)}>
                     编辑
                   </DropdownMenuItem>
-                  <DropdownMenuItem className="cursor-pointer text-destructive data-[highlighted]:text-destructive">
+                  <DropdownMenuItem
+                    className="cursor-pointer text-destructive data-[highlighted]:text-destructive"
+                    onClick={handleDelete}
+                  >
                     删除
                   </DropdownMenuItem>
                 </DropdownMenuContent>
