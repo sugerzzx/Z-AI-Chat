@@ -69,3 +69,19 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json(conversationWithMapping);
   }
 }
+
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id;
+
+  if (!id) {
+    return NextResponse.json({ error: "No conversation id found" }, { status: 500 });
+  }
+
+  const conversation = await prisma.conversation.delete({
+    where: {
+      id,
+    },
+  });
+
+  return NextResponse.json({ success: true });
+}
