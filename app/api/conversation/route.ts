@@ -217,5 +217,5 @@ function onUpdateMessage() {
 
 export async function GET() {
   eventEmitter.emit(Event.STOP_GENERATE);
-  return NextResponse.json({ status: 0 });
+  return NextResponse.json({ success: true });
 }
