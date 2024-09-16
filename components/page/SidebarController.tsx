@@ -6,7 +6,9 @@ import { cn } from "@/lib/utils";
 import ArrowTooltip, { ArrowTooltipProps } from "@/components/ui/ArrowTooltip";
 import { Button } from "@/components/ui/Button";
 
-interface SidebarControlerProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, Pick<ArrowTooltipProps, "side"> {
+interface SidebarControlerProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    Pick<ArrowTooltipProps, "side"> {
   title: string;
 }
 
@@ -17,11 +19,21 @@ const SidebarControler: FC<SidebarControlerProps> = ({ title, side }) => {
   } = useAppContext();
   return (
     <ArrowTooltip title={title} side={side}>
-      <Button variant="ghost"
-        size='icon'
-        onClick={() => dispatch({ type: ActionType.UPDATE, field: "isSidebarOpen", value: !isSidebarOpen })}
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() =>
+          dispatch({ type: ActionType.UPDATE, field: "isSidebarOpen", value: !isSidebarOpen })
+        }
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" className="icon-xl-heavy">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          fill="none"
+          viewBox="0 0 24 24"
+          className="icon-xl-heavy"
+        >
           <path
             fill="currentColor"
             fillRule="evenodd"

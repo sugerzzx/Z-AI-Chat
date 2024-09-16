@@ -25,7 +25,9 @@ const AssistantMessage: FC<AssistantMessageProps> = ({ content = "" }) => {
           <div className="flex flex-grow flex-col max-w-full">
             <div className="min-h-[20px] text-message flex w-full flex-col items-end gap-2 whitespace-pre-wrap break-words [.text-message+&]:mt-5 overflow-x-auto">
               <div className="flex w-full flex-col gap-1 empty:hidden first:pt-[3px]">
-                <Markdown className="prose w-full break-words dark:prose-invert dark">{content}</Markdown>
+                <Markdown className="prose w-full break-words dark:prose-invert dark">
+                  {content}
+                </Markdown>
               </div>
             </div>
           </div>

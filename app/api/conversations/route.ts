@@ -11,14 +11,14 @@ export async function GET(request: NextRequest) {
     skip: offset,
     take: limit,
     orderBy: {
-      updateTime: "desc"
-    }
+      updateTime: "desc",
+    },
   });
 
   return NextResponse.json({
     code: 0,
-    items: items.map(item => ({ ...item, updateTime: item.updateTime.getTime() })),
+    items: items.map((item) => ({ ...item, updateTime: item.updateTime.getTime() })),
     total,
-    offset
+    offset,
   });
 }

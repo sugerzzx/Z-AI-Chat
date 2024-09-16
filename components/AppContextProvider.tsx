@@ -1,9 +1,9 @@
-'use client';
-import { createContext, Dispatch, FC, ReactNode, useContext, useMemo, useReducer } from 'react';
-import { State, Action, appReducer, initialState } from '@/lib/appReducer';
+"use client";
+import { createContext, Dispatch, FC, ReactNode, useContext, useMemo, useReducer } from "react";
+import { State, Action, appReducer, initialState } from "@/lib/appReducer";
 
 type AppContextProps = {
-  state: State,
+  state: State;
   dispatch: Dispatch<Action>;
 };
 
@@ -20,9 +20,7 @@ export const useAppContext = () => {
 export const AppContextProvider: FC<AppContextProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const contextValue = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-  return <AppContext.Provider value={contextValue}>
-    {children}
-  </AppContext.Provider>;
+  return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;
 };
 
 export default AppContext;

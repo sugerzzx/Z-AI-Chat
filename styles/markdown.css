@@ -45,12 +45,12 @@
     padding-top: 0.5rem;
   }
 
-  .markdown blockquote>p {
+  .markdown blockquote > p {
     margin: 0;
   }
 
-  .markdown blockquote>p:after,
-  .markdown blockquote>p:before {
+  .markdown blockquote > p:after,
+  .markdown blockquote > p:before {
     display: none;
   }
 
@@ -62,7 +62,7 @@
     padding-left: 0;
   }
 
-  .markdown ol>li {
+  .markdown ol > li {
     counter-increment: list-number;
     display: block;
     margin-bottom: 0;
@@ -70,14 +70,16 @@
     min-height: 28px;
   }
 
-  .markdown ol>li:before {
+  .markdown ol > li:before {
     --tw-translate-x: -100%;
     --tw-text-opacity: 1;
     color: rgba(142, 142, 160, var(--tw-text-opacity));
     content: counters(list-number, ".") ".";
     padding-right: 0.5rem;
     position: absolute;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate))
+      skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+      scaleY(var(--tw-scale-y));
   }
 
   :is(.dark .markdown ol > li):before {
@@ -91,29 +93,31 @@
     padding-left: 0;
   }
 
-  .markdown ul>li {
+  .markdown ul > li {
     display: block;
     margin: 0;
     min-height: 28px;
   }
 
-  .markdown ul>li:before {
+  .markdown ul > li:before {
     --tw-translate-x: -100%;
     content: "•";
     font-size: 0.875rem;
     line-height: 1.25rem;
     padding-right: 0.5rem;
     position: absolute;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate))
+      skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x))
+      scaleY(var(--tw-scale-y));
   }
 
-  .markdown ol li>p,
-  .markdown ul li>p {
+  .markdown ol li > p,
+  .markdown ul li > p {
     margin: 0;
   }
 
-  .markdown ol li>pre,
-  .markdown ul li>pre {
+  .markdown ol li > pre,
+  .markdown ul li > pre {
     margin: 0.5em 0;
   }
 
@@ -290,11 +294,11 @@
     quotes: "\201C" "\201D" "\2018" "\2019";
   }
 
-  .prose :where(blockquote p:first-of-type):not( :where([class~="not-prose"] *)):before {
+  .prose :where(blockquote p:first-of-type):not(:where([class~="not-prose"] *)):before {
     content: open-quote;
   }
 
-  .prose :where(blockquote p:last-of-type):not( :where([class~="not-prose"] *)):after {
+  .prose :where(blockquote p:last-of-type):not(:where([class~="not-prose"] *)):after {
     content: close-quote;
   }
 
@@ -564,19 +568,19 @@
     margin-top: 0.75em;
   }
 
-  .prose :where(.prose > ul > li > :first-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(.prose > ul > li > :first-child):not(:where([class~="not-prose"] *)) {
     margin-top: 1.25em;
   }
 
-  .prose :where(.prose > ul > li > :last-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(.prose > ul > li > :last-child):not(:where([class~="not-prose"] *)) {
     margin-bottom: 1.25em;
   }
 
-  .prose :where(.prose > ol > li > :first-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(.prose > ol > li > :first-child):not(:where([class~="not-prose"] *)) {
     margin-top: 1.25em;
   }
 
-  .prose :where(.prose > ol > li > :last-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(.prose > ol > li > :last-child):not(:where([class~="not-prose"] *)) {
     margin-bottom: 1.25em;
   }
 
@@ -613,11 +617,11 @@
     padding: 0.5714286em;
   }
 
-  .prose :where(tbody td:first-child, tfoot td:first-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(tbody td:first-child, tfoot td:first-child):not(:where([class~="not-prose"] *)) {
     padding-left: 0;
   }
 
-  .prose :where(tbody td:last-child, tfoot td:last-child):not( :where([class~="not-prose"] *)) {
+  .prose :where(tbody td:last-child, tfoot td:last-child):not(:where([class~="not-prose"] *)) {
     padding-right: 0;
   }
 

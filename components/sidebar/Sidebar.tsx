@@ -5,9 +5,9 @@ import ChatHistory from "./ChatHistory";
 import Container from "./Container";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 
-interface SideBarProps { }
+interface SideBarProps {}
 
-const SideBar: FC<SideBarProps> = ({ }) => {
+const SideBar: FC<SideBarProps> = ({}) => {
   return (
     <Container>
       <SwitchAndNewChat />

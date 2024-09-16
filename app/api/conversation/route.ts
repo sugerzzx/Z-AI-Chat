@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
       role: Role.ASSISTANT,
       conversationId: userMessage.conversationId,
       parent: userMessage.id,
-    }
+    },
   });
 
   const assistantResponse = await getAssistantResponse(userMessage.content!, payload.model);
@@ -94,7 +94,7 @@ async function createUserMessage(payload: ConversationPayload) {
     const newConversation = await prisma.conversation.create({
       data: {
         title: content,
-      }
+      },
     });
     const newRootMessage = await prisma.message.create({
       data: {
@@ -121,7 +121,10 @@ async function findMessage(id: string) {
   });
 }
 
-async function getResponse(result: GenerateContentStreamResult | ReturnType<typeof getMockStream>, message: Message) {
+async function getResponse(
+  result: GenerateContentStreamResult | ReturnType<typeof getMockStream>,
+  message: Message,
+) {
   const responseStream = new TransformStream();
   const writer = responseStream.writable.getWriter();
   const encoder = new TextEncoder();
@@ -133,7 +136,9 @@ async function getResponse(result: GenerateContentStreamResult | ReturnType<type
       isStop = true;
     });
     let content = "";
-    writer.write(encoder.encode(`event: start\ndata: ${JSON.stringify({ ...message, content })}\n\n`));
+    writer.write(
+      encoder.encode(`event: start\ndata: ${JSON.stringify({ ...message, content })}\n\n`),
+    );
     for await (const chunk of result.stream) {
       if (isStop) {
         break;
@@ -142,9 +147,7 @@ async function getResponse(result: GenerateContentStreamResult | ReturnType<type
       for (const char of text) {
         content += char;
         writer.write(
-          encoder.encode(
-            `event: message\ndata: ${JSON.stringify({ ...message, content })}\n\n`
-          )
+          encoder.encode(`event: message\ndata: ${JSON.stringify({ ...message, content })}\n\n`),
         );
         await sleep(DEFAULT_DELAY); // 延迟 10 毫秒发送每个字符
       }
@@ -170,9 +173,13 @@ function getProxyAgent() {
 }
 
 async function getAssistantResponse(requestMessage: string, modelType: ModelType) {
-  const model = googleGenAI.getGenerativeModel({ model: modelType === ModelType.AUTO ? DEFAULT_TYPE : modelType });
+  const model = googleGenAI.getGenerativeModel({
+    model: modelType === ModelType.AUTO ? DEFAULT_TYPE : modelType,
+  });
 
-  const result = env.MOCK_MESSAGE ? getMockStream(env.MOCK_MESSAGE) : await model.generateContentStream(requestMessage, { dispatcher });
+  const result = env.MOCK_MESSAGE
+    ? getMockStream(env.MOCK_MESSAGE)
+    : await model.generateContentStream(requestMessage, { dispatcher });
 
   return result;
 }
@@ -189,7 +196,7 @@ function getMockStream(content: string) {
         // 每次迭代返回一个包含 text 方法的对象
         yield getChunk(char);
       }
-    }
+    },
   };
 
   return { stream };

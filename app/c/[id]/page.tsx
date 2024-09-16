@@ -3,7 +3,7 @@ import MsgAndExamContainer from "@/components/page/MsgAndExamContainer";
 import { ConversationFetcher } from "@/components/chatPage/Conversation";
 
 interface PageProps {
-  params: { id: string; };
+  params: { id: string };
 }
 
 const Page: FC<PageProps> = async ({ params }) => {

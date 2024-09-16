@@ -20,7 +20,7 @@ interface EventBusContextProviderProps {
 }
 
 export const EventBusContextProvider: FC<EventBusContextProviderProps> = ({ children }) => {
-  const listenersRef = useRef<{ [key: string]: EventListener[]; }>({});
+  const listenersRef = useRef<{ [key: string]: EventListener[] }>({});
 
   const subscribe = useCallback((eventName: string, callback: EventListener) => {
     if (!listenersRef.current[eventName]) {
@@ -31,17 +31,22 @@ export const EventBusContextProvider: FC<EventBusContextProviderProps> = ({ chil
 
   const unsubscribe = useCallback((eventName: string, callback: EventListener) => {
     if (listenersRef.current[eventName]) {
-      listenersRef.current[eventName] = listenersRef.current[eventName].filter(cb => cb !== callback);
+      listenersRef.current[eventName] = listenersRef.current[eventName].filter(
+        (cb) => cb !== callback,
+      );
     }
   }, []);
 
   const publish = useCallback((eventName: string, data?: any) => {
     if (listenersRef.current[eventName]) {
-      listenersRef.current[eventName].forEach(cb => cb(data));
+      listenersRef.current[eventName].forEach((cb) => cb(data));
     }
   }, []);
 
-  const contextValue = useMemo(() => ({ subscribe, unsubscribe, publish }), [subscribe, unsubscribe, publish]);
+  const contextValue = useMemo(
+    () => ({ subscribe, unsubscribe, publish }),
+    [subscribe, unsubscribe, publish],
+  );
 
   return <EventBusContext.Provider value={contextValue}>{children}</EventBusContext.Provider>;
 };

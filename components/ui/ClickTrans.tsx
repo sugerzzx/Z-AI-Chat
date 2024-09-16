@@ -8,7 +8,12 @@ const ClickTrans: FC<ClickTransProps> = ({ children, className }) => {
   const [isTransition, setIsTransition] = useState(false);
 
   return (
-    <div className={cn("transition-all", className)} onClick={() => setIsTransition(true)} style={{ transform: isTransition ? "scale(0.98)" : "none" }} onTransitionEnd={() => setIsTransition(false)}>
+    <div
+      className={cn("transition-all", className)}
+      onClick={() => setIsTransition(true)}
+      style={{ transform: isTransition ? "scale(0.98)" : "none" }}
+      onTransitionEnd={() => setIsTransition(false)}
+    >
       {children}
     </div>
   );

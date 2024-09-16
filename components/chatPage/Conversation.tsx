@@ -44,7 +44,9 @@ const handleConversation = (conversation: ConversationWithMapping) => {
 export const ConversationFetcher: FC<ConversationFetcher> = async ({ conversationId }) => {
   const getConversation = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/conversation/${conversationId}`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/conversation/${conversationId}`,
+      );
       return response.json();
     } catch (error) {
       console.error("Failed to fetch conversation", error);

@@ -15,7 +15,7 @@ export default function Home() {
 
   useEffect(() => {
     const callback = () => {
-      dispatch({ type: ActionType.UPDATE, field: 'messageList', value: [] });
+      dispatch({ type: ActionType.UPDATE, field: "messageList", value: [] });
       setIsConversation(true);
     };
     subscribe(Event.NewConversation, callback);
@@ -24,7 +24,7 @@ export default function Home() {
     };
   }, [dispatch, subscribe, unsubscribe]);
 
-  return <MsgAndExamContainer>
-    {isConversation ? <Conversation /> : <ExampleComp />}
-  </MsgAndExamContainer>;
+  return (
+    <MsgAndExamContainer>{isConversation ? <Conversation /> : <ExampleComp />}</MsgAndExamContainer>
+  );
 }

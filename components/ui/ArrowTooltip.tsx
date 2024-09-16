@@ -1,11 +1,5 @@
-import { FC, ReactNode } from 'react';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-  Arrow
-} from "./Tooltip";
+import { FC, ReactNode } from "react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, Arrow } from "./Tooltip";
 
 export interface ArrowTooltipProps {
   children: ReactNode;
@@ -18,9 +12,7 @@ const ArrowTooltip: FC<ArrowTooltipProps> = ({ children, title, delay = 300, sid
   return (
     <TooltipProvider delayDuration={delay}>
       <Tooltip>
-        <TooltipTrigger asChild>
-          {children}
-        </TooltipTrigger>
+        <TooltipTrigger asChild>{children}</TooltipTrigger>
         <TooltipContent side={side}>
           <p>{title}</p>
           <Arrow />

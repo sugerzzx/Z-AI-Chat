@@ -8,9 +8,16 @@ export interface ConversationTitle {
   updateTime: number;
 }
 
-export type MessageWithChildren = Omit<Message, 'createTime'> & { children: string[] | never[], createTime: number; };
+export type MessageWithChildren = Omit<Message, "createTime"> & {
+  children: string[] | never[];
+  createTime: number;
+};
 
-export type ConversationWithMapping = ReplaceFieldType<Conversation, 'createTime' | 'updateTime', number> & { mapping: Record<string, FormattedMessage>; };
+export type ConversationWithMapping = ReplaceFieldType<
+  Conversation,
+  "createTime" | "updateTime",
+  number
+> & { mapping: Record<string, FormattedMessage> };
 
 export type PayloadMessage = {
   id: string;

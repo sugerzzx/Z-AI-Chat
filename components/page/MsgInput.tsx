@@ -59,7 +59,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     const payload: ConversationPayload = {
       action: ConversationAction.NEXT,
       messages: [message],
-      parentMessageId: parentMessage?.id ?? '',
+      parentMessageId: parentMessage?.id ?? "",
       conversationId,
       model: ModelType.AUTO,
     };
@@ -68,10 +68,19 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     isNewConversation && publish(Event.NewConversation);
 
     // 如果有父消息，更新父消息的children
-    parentMessage && dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, message.id] } });
+    parentMessage &&
+      dispatch({
+        type: ActionType.UPDATE_MESSAGE,
+        message: { ...parentMessage, children: [...parentMessage.children, message.id] },
+      });
 
     // 构造添加的新消息
-    const newMessage = { ...message, conversationId, parent: payload.parentMessageId, children: [] };
+    const newMessage = {
+      ...message,
+      conversationId,
+      parent: payload.parentMessageId,
+      children: [],
+    };
     dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
 
     setUserInput("");
@@ -91,10 +100,17 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       try {
         const message: ReplaceFieldType<Message, "createTime", string> = JSON.parse(data);
         return { ...message, createTime: Date.parse(message.createTime), children: [] };
-      }
-      catch (e) {
+      } catch (e) {
         console.log(e);
-        return { id: '', content: '', role: '', conversationId: '', parent: '', children: [], createTime: 0 };
+        return {
+          id: "",
+          content: "",
+          role: "",
+          conversationId: "",
+          parent: "",
+          children: [],
+          createTime: 0,
+        };
       }
     };
 
@@ -105,10 +121,18 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       newMessage = parseMessage(event.data);
 
       const message = payload.messages[0]; // 原消息
-      const parentMessage: MessageWithChildren = { ...message, conversationId, parent: payload.parentMessageId, children: [] }; //  新消息的父消息
+      const parentMessage: MessageWithChildren = {
+        ...message,
+        conversationId,
+        parent: payload.parentMessageId,
+        children: [],
+      }; //  新消息的父消息
 
       // 更新父消息的children
-      dispatch({ type: ActionType.UPDATE_MESSAGE, message: { ...parentMessage, children: [...parentMessage.children, newMessage.id] } });
+      dispatch({
+        type: ActionType.UPDATE_MESSAGE,
+        message: { ...parentMessage, children: [...parentMessage.children, newMessage.id] },
+      });
 
       // 将新的消息添加到消息列表
       dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
@@ -162,7 +186,13 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                     className="flex items-center justify-center h-8 w-8 dark:text-white rounded-full focus-visible:outline-black dark:focus-visible:outline-white mb-1 ml-1.5"
                     aria-disabled="false"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         fill="currentColor"
                         fillRule="evenodd"
@@ -171,7 +201,12 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                       ></path>
                     </svg>
                   </button>
-                  <div aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-:rqe:" data-state="closed"></div>
+                  <div
+                    aria-haspopup="dialog"
+                    aria-expanded="false"
+                    aria-controls="radix-:rqe:"
+                    data-state="closed"
+                  ></div>
                 </div>
                 <div className="flex min-w-0 flex-1 flex-col">
                   <Textarea
@@ -183,13 +218,13 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                     placeholder="发送消息"
                     className="m-0 resize-none border-0 bg-transparent px-0 focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 max-h-52 min-h-[auto] text-base"
                     value={userInput}
-                    onChange={e => setUserInput(e.target.value)}
+                    onChange={(e) => setUserInput(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    ref={ref => {
+                    ref={(ref) => {
                       ref?.focus();
-                      ref?.addEventListener('input', (e) => {
-                        ref.style.height = 'auto';
-                        ref.style.height = ref.scrollHeight + 'px';
+                      ref?.addEventListener("input", (e) => {
+                        ref.style.height = "auto";
+                        ref.style.height = ref.scrollHeight + "px";
                       });
                     }}
                   />
@@ -200,11 +235,25 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                   onClick={isGenerating ? stopGenerate : sendMessage}
                 >
                   {isGenerating ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" className="icon-lg">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      className="icon-lg"
+                    >
                       <rect width="10" height="10" x="7" y="7" fill="currentColor" rx="1.25"></rect>
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32" className="icon-2xl">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="32"
+                      height="32"
+                      fill="none"
+                      viewBox="0 0 32 32"
+                      className="icon-2xl"
+                    >
                       <path
                         fill="currentColor"
                         fillRule="evenodd"

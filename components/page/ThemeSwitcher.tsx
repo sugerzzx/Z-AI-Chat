@@ -1,5 +1,5 @@
 "use client";
-import { FC } from 'react';
+import { FC } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/Button";
@@ -10,11 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 
-interface ThemeSwitcherProps {
+interface ThemeSwitcherProps {}
 
-}
-
-const ThemeSwitcher: FC<ThemeSwitcherProps> = ({ }) => {
+const ThemeSwitcher: FC<ThemeSwitcherProps> = ({}) => {
   const { setTheme } = useTheme();
 
   return (
@@ -27,15 +25,9 @@ const ThemeSwitcher: FC<ThemeSwitcherProps> = ({ }) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          System
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
