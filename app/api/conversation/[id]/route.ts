@@ -13,7 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   const id = params.id;
 
   if (!id) {
-    return NextResponse.json({ code: -1, data: 'No conversation id found' });
+    return NextResponse.json({ error: 'No conversation id found' }, { status: 500 });
   }
 
   const conversationWithMessages = await prisma.conversation.findUnique({
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   });
 
   if (!conversationWithMessages) {
-    return NextResponse.json({ code: -1, data: 'No conversation found' });
+    return NextResponse.json({ error: 'No conversation found' }, { status: 500 });
   }
 
   const { messages, ...conversation } = conversationWithMessages;
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   };
 
   if (!rootMessage) {
-    return NextResponse.json({ code: -1, data: 'No root message found' });
+    return NextResponse.json({ error: 'No root message found' }, { status: 500 });
   } else {
     const mapping = createMapping(rootMessage);
     const conversationWithMapping: ConversationWithMapping = {
@@ -66,6 +66,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       updateTime: conversation.updateTime.getTime(),
       mapping
     };
-    return NextResponse.json({ code: 0, data: { conversation: conversationWithMapping } });
+    return NextResponse.json(conversationWithMapping);
   }
 }

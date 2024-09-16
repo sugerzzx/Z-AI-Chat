@@ -1,6 +1,6 @@
 import { FC } from "react";
 import MsgAndExamContainer from "@/components/page/MsgAndExamContainer";
-import Conversation from "@/components/chatPage/Conversation";
+import { ConversationFetcher } from "@/components/chatPage/Conversation";
 
 interface PageProps {
   params: { id: string; };
@@ -9,7 +9,7 @@ interface PageProps {
 const Page: FC<PageProps> = async ({ params }) => {
   return (
     <MsgAndExamContainer conversationId={params.id}>
-      <Conversation conversationId={params.id} />
+      <ConversationFetcher conversationId={params.id} />
     </MsgAndExamContainer>
   );
 };
