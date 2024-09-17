@@ -2,6 +2,7 @@ import { FC } from "react";
 import PageHeader from "../page/PageHeader";
 import MsgList from "./MsgList";
 import { ConversationWithMapping, MessageWithChildren } from "@/types/conversation";
+import ConversationNotFound from "./ConversationNotFound";
 
 interface ConversationProps {
   fetchedMessageList?: MessageWithChildren[] | null;
@@ -47,6 +48,9 @@ export const ConversationFetcher: FC<ConversationFetcher> = async ({ conversatio
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/conversation/${conversationId}`,
       );
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       return response.json();
     } catch (error) {
       console.error("Failed to fetch conversation", error);
@@ -56,5 +60,9 @@ export const ConversationFetcher: FC<ConversationFetcher> = async ({ conversatio
   const conversation = await getConversation();
   const fetchedMessageList = conversation && handleConversation(conversation);
 
-  return <Conversation fetchedMessageList={fetchedMessageList} />;
+  return fetchedMessageList ? (
+    <Conversation fetchedMessageList={fetchedMessageList} />
+  ) : (
+    <ConversationNotFound />
+  );
 };
