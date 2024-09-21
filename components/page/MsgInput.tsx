@@ -12,6 +12,7 @@ import { ConversationPayload, MessageWithChildren, PayloadMessage } from "@/type
 import { ReplaceFieldType } from "@/types/typeUtils";
 import { useEventBusContext } from "@/components/EventBusContext";
 import { useRouter } from "next/navigation";
+import { revalidatePathAction } from "@/lib/actions";
 
 interface MsgInputProps {
   conversationId?: string;
@@ -153,7 +154,11 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
 
     source.addEventListener("end", () => {
       setIsGenerating(false);
-      isNewConversation && router.push(`/c/${newMessage.conversationId}`);
+      if (isNewConversation) {
+        router.push(`/c/${newMessage.conversationId}`);
+      } else {
+        revalidatePathAction(`/c/${newMessage.conversationId}`, "page");
+      }
     });
   };
 
