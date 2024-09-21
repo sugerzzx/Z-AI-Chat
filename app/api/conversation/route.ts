@@ -10,13 +10,13 @@ import { Message } from "@prisma/client";
 import { DEFAULT_TYPE, ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
 import { GenerateContentStreamResult } from "@google/generative-ai";
 
-enum Event {
+export enum Event {
   UPDATE_MESSAGE = "updateMessage",
   STOP_GENERATE = "stopGenerate",
 }
 const DEFAULT_DELAY = 10;
 
-const eventEmitter = new EventEmitter();
+export const eventEmitter = new EventEmitter();
 
 const dispatcher = getProxyAgent();
 
@@ -213,9 +213,4 @@ function onUpdateMessage() {
       },
     });
   });
-}
-
-export async function GET() {
-  eventEmitter.emit(Event.STOP_GENERATE);
-  return NextResponse.json({ success: true });
 }

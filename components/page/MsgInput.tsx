@@ -168,8 +168,8 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   };
 
   const stopGenerate = async () => {
-    await fetch("/api/conversation", {
-      method: "GET",
+    await fetch("/api/stop_conversation", {
+      method: "POST",
     });
     isStop.current = true;
   };
