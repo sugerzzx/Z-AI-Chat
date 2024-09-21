@@ -131,12 +131,14 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
             )}
           </div>
         </div>
-      </li>
+        <div className="absolute">
       <DeleteDialog
         open={isDelDialogOpen}
         setOpen={setIsDelDialogOpen}
         handleDelete={handleDelete}
       />
+        </div>
+      </li>
     </>
   );
 });
