@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ProxyAgent } from "undici";
-import EventEmitter from "events";
+import { eventEmitter, Event } from "@/lib/apiEventEmitter";
 import prisma from "@/lib/db";
 import { googleGenAI } from "@/lib/googleGen";
 import { sleep } from "@/lib/utils";
@@ -10,13 +10,7 @@ import { Message } from "@prisma/client";
 import { DEFAULT_TYPE, ConversationAction, ModelType, Role } from "@/constant/conversation.enum";
 import { GenerateContentStreamResult } from "@google/generative-ai";
 
-export enum Event {
-  UPDATE_MESSAGE = "updateMessage",
-  STOP_GENERATE = "stopGenerate",
-}
 const DEFAULT_DELAY = 10;
-
-export const eventEmitter = new EventEmitter();
 
 const dispatcher = getProxyAgent();
 

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eventEmitter, Event } from "../conversation/route";
+import { eventEmitter, Event } from "@/lib/apiEventEmitter";
 
 export async function POST() {
   eventEmitter.emit(Event.STOP_GENERATE);
