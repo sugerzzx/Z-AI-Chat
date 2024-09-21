@@ -9,7 +9,7 @@ type MessageWithChildrenNodes = Message & {
   }[];
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string; }; }) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id;
 
   if (!id) {
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string; }; }) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   const id = params.id;
 
   if (!id) {

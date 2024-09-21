@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { setGlobalDispatcher, ProxyAgent } from "undici";
+import { ProxyAgent } from "undici";
 import EventEmitter from "events";
 import prisma from "@/lib/db";
 import { googleGenAI } from "@/lib/googleGen";
