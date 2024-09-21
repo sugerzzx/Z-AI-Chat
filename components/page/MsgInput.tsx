@@ -22,7 +22,8 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   const [userInput, setUserInput] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
   const isStop = useRef(false);
-  const isDiabled = isGenerating ? false : userInput.length === 0;
+  const inputIsEmpty = userInput.trim().length === 0;
+  const isDiabled = isGenerating ? false : inputIsEmpty;
   const {
     state: { messageList },
     dispatch,
@@ -164,7 +165,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
-      if (e.shiftKey || isGenerating) {
+      if (e.shiftKey || isGenerating || inputIsEmpty) {
         return;
       }
       e.preventDefault();
