@@ -88,3 +88,29 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json({ error }, { status: 500 });
   }
 }
+
+export async function PATCH(
+  request: NextRequest,
+  { params, body }: { params: { id: string }; body: { title: string } },
+) {
+  const id = params.id;
+  const { title } = await request.json();
+
+  if (!id) {
+    return NextResponse.json({ error: "No conversation id found" }, { status: 500 });
+  }
+
+  try {
+    await prisma.conversation.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+      },
+    });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error }, { status: 500 });
+  }
+}

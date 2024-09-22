@@ -227,11 +227,12 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                     onChange={(e) => setUserInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     ref={(ref) => {
-                      ref?.focus();
                       ref?.addEventListener("input", (e) => {
                         ref.style.height = "auto";
                         ref.style.height = ref.scrollHeight + "px";
                       });
+                      if (document.activeElement?.tagName === "INPUT") return;
+                      ref?.focus();
                     }}
                   />
                 </div>

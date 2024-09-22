@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { forwardRef, memo, useState, FC } from "react";
+import { forwardRef, memo, useState, FC, SetStateAction } from "react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import {
@@ -32,21 +32,17 @@ interface TitleProps {
 }
 
 const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, ref) => {
+  const [currentTitle, setCurrentTitle] = useState(title);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [isDelDialogOpen, setIsDelDialogOpen] = useState(false);
   const isActive = isCurrent || isMenuOpen;
   const queryClient = useQueryClient();
 
-  const deleteConversation = async () => {
-    const res = await fetch(`/api/conversation/${id}`, {
+  const deleteConversation = () =>
+    fetch(`/api/conversation/${id}`, {
       method: "DELETE",
     });
-    if (!res.ok) {
-      throw new Error("Failed to delete conversation");
-    }
-    return res.json();
-  };
 
   const deleteMutation = useMutation({
     mutationFn: deleteConversation,
@@ -59,9 +55,13 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
     deleteMutation.mutate();
   };
 
+  const handleDoubleClick = () => {
+    setIsEdit(true);
+  };
+
   return (
     <>
-      <li className="relative h-auto" ref={ref}>
+      <li className="relative h-auto" ref={ref} onDoubleClick={handleDoubleClick}>
         <div
           className={cn(
             "group relative rounded-lg active:opacity-90",
@@ -70,7 +70,7 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
         >
           <Link href={`/c/${id}`} className="flex items-center gap-2 p-2">
             <div className="relative grow overflow-hidden whitespace-nowrap" dir="auto">
-              {title}
+              {currentTitle}
               <div
                 className={cn(
                   "absolute bottom-0 top-0 to-transparent ltr:right-0 ltr:bg-gradient-to-l rtl:left-0 rtl:bg-gradient-to-r w-10 ",
@@ -90,11 +90,11 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
           >
             {isEdit ? (
               <div className="absolute bottom-0 left-[7px] right-2 top-0 flex items-center">
-                <Input
-                  defaultValue={title}
-                  onBlur={() => setIsEdit(false)}
-                  autoFocus={true}
-                  className="h-auto w-full p-0 focus:border focus:border-chart-2 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+                <TitleEdit
+                  id={id}
+                  title={currentTitle}
+                  setIsEdit={setIsEdit}
+                  setCurrentTitle={setCurrentTitle}
                 />
               </div>
             ) : (
@@ -132,11 +132,11 @@ const Title = forwardRef<HTMLLIElement, TitleProps>(({ id, title, isCurrent }, r
           </div>
         </div>
         <div className="absolute">
-      <DeleteDialog
-        open={isDelDialogOpen}
-        setOpen={setIsDelDialogOpen}
-        handleDelete={handleDelete}
-      />
+          <DeleteDialog
+            open={isDelDialogOpen}
+            setOpen={setIsDelDialogOpen}
+            handleDelete={handleDelete}
+          />
         </div>
       </li>
     </>
@@ -167,3 +167,61 @@ const DeleteDialog: FC<DeleteDialogProps> = ({ open, setOpen, handleDelete }) =>
     </AlertDialogContent>
   </AlertDialog>
 );
+
+const TitleEdit: FC<{
+  title: string;
+  id: string;
+  setIsEdit: (value: SetStateAction<boolean>) => void;
+  setCurrentTitle: (value: SetStateAction<string>) => void;
+}> = ({ title, id, setIsEdit, setCurrentTitle }) => {
+  const [inputValue, setInputValue] = useState(title);
+  const queryClient = useQueryClient();
+
+  const updateTitle = (title: string) =>
+    fetch(`/api/conversation/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title }),
+    });
+
+  const updateTitleMutation = useMutation({
+    mutationFn: updateTitle,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QueryKey.Conversations] });
+    },
+  });
+
+  const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsEdit(false);
+    if (inputValue === title) {
+      return;
+    } else {
+      setCurrentTitle(inputValue);
+      try {
+        updateTitleMutation.mutate(inputValue);
+      } catch (error) {
+        setCurrentTitle(title);
+      }
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    const target = e.target as HTMLInputElement;
+    if (e.key === "Enter" || e.key === "Escape") {
+      target.blur();
+    }
+  };
+
+  return (
+    <Input
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      onKeyDown={handleInputKeyDown}
+      onBlur={handleBlur}
+      autoFocus={true}
+      className="h-auto w-full p-0 focus:border focus:border-chart-2 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-none"
+    />
+  );
+};
