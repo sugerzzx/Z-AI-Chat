@@ -9,6 +9,7 @@ import { Event } from "@/constant/event.enum";
 import { Loader } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/queryKey.enum";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ChatHistoryProps {}
 
@@ -16,7 +17,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
   const { subscribe, unsubscribe } = useEventBusContext();
   const pathname = usePathname();
   const limit = 20;
-  const lastTitle = useRef<HTMLLIElement>(null);
+  const lastTitle = useRef<HTMLDivElement>(null);
 
   const fetchConversations = ({ pageParam = 0 }) =>
     fetch(`/api/conversations?offset=${pageParam}&limit=${limit}`).then((res) => res.json());
@@ -88,19 +89,29 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
               </span>
             </div>
             <ol>
-              {chatList.map(({ id, title }: ConversationTitle) => {
-                const isCurrent = pathname === `/c/${id}`;
-                const isLast = chatList[chatList.length - 1].id === id;
-                return (
-                  <Title
-                    key={id}
-                    isCurrent={isCurrent}
-                    id={id}
-                    title={title}
-                    ref={isLast ? lastTitle : null}
-                  />
-                );
-              })}
+              <AnimatePresence>
+                {chatList.map(({ id, title }: ConversationTitle) => {
+                  const isCurrent = pathname === `/c/${id}`;
+                  const isLast = chatList[chatList.length - 1].id === id;
+                  return (
+                    <motion.li
+                      layout
+                      key={id}
+                      initial={{ opacity: 0, y: 0 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <Title
+                        isCurrent={isCurrent}
+                        id={id}
+                        title={title}
+                        ref={isLast ? lastTitle : null}
+                      />
+                    </motion.li>
+                  );
+                })}
+              </AnimatePresence>
             </ol>
           </div>
         ))}
