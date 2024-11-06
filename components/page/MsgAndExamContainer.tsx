@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import MsgInput from "./MsgInput";
+import { ScrollContextProvider } from "../ScrollContext";
 
 interface MsgAndExamContainerProps {
   children?: React.ReactNode;
@@ -10,8 +11,10 @@ const MsgAndExamContainer: FC<MsgAndExamContainerProps> = ({ children, conversat
   return (
     <>
       <div className="flex h-full flex-col focus-visible:outline-0">
-        <div className="flex-1 overflow-hidden">{children}</div>
-        <MsgInput conversationId={conversationId} />
+        <ScrollContextProvider>
+          <div className="flex-1 overflow-hidden">{children}</div>
+          <MsgInput conversationId={conversationId} />
+        </ScrollContextProvider>
       </div>
       <div className="group fixed z-10 hidden gap-1 bottom-2 end-2 md:flex lg:bottom-3 lg:end-3">
         <button

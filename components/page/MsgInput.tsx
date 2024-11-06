@@ -13,6 +13,7 @@ import { ReplaceFieldType } from "@/types/typeUtils";
 import { useEventBusContext } from "@/components/EventBusContext";
 import { useRouter } from "next/navigation";
 import { revalidatePathAction } from "@/lib/actions";
+import { useScrollContext } from "../ScrollContext";
 
 interface MsgInputProps {
   conversationId?: string;
@@ -31,6 +32,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   const { publish } = useEventBusContext();
   const router = useRouter();
   const isNewConversation = conversationId === "";
+  const { enableScroll, disableScroll } = useScrollContext();
 
   const upsertMessage = async (message: Omit<Message, "createTime">) => {
     const response = await fetch("/api/message/upsert", {
@@ -62,31 +64,44 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       action: ConversationAction.NEXT,
       messages: [message],
       parentMessageId: parentMessage?.id ?? "",
-      conversationId,
+      conversationId: isNewConversation ? uuid() : conversationId,
       model: ModelType.AUTO,
+      assistantMessageId: uuid(),
     };
 
     // 如果为新对话，发布Event.NewConversation
     isNewConversation && publish(Event.NewConversation);
 
     // 如果有父消息，更新父消息的children
-    parentMessage &&
+    if (parentMessage) {
       dispatch({
         type: ActionType.UPDATE_MESSAGE,
         message: { ...parentMessage, children: [...parentMessage.children, message.id] },
       });
+    }
 
     // 构造添加的新消息
-    const newMessage = {
+    const newUserMessage = {
       ...message,
-      conversationId,
+      conversationId: payload.conversationId,
       parent: payload.parentMessageId,
+      children: [payload.assistantMessageId],
+    };
+    const newAssistantMessage = {
+      id: payload.assistantMessageId,
+      content: "loading...",
+      role: Role.ASSISTANT,
+      createTime: Date.now(),
+      conversationId: payload.conversationId,
+      parent: newUserMessage.id,
       children: [],
     };
-    dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
+    dispatch({ type: ActionType.ADD_MESSAGE, message: newUserMessage });
+    dispatch({ type: ActionType.ADD_MESSAGE, message: newAssistantMessage });
 
     setUserInput("");
     doSend(payload);
+    enableScroll();
   };
 
   const doSend = async (payload: ConversationPayload) => {
@@ -116,28 +131,11 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       }
     };
 
-    let newMessage: MessageWithChildren;
     source.addEventListener("start", (event: MessageEvent) => {
       setIsGenerating(true);
 
-      newMessage = parseMessage(event.data);
-
-      const message = payload.messages[0]; // 原消息
-      const parentMessage: MessageWithChildren = {
-        ...message,
-        conversationId,
-        parent: payload.parentMessageId,
-        children: [],
-      }; //  新消息的父消息
-
-      // 更新父消息的children
-      dispatch({
-        type: ActionType.UPDATE_MESSAGE,
-        message: { ...parentMessage, children: [...parentMessage.children, newMessage.id] },
-      });
-
-      // 将新的消息添加到消息列表
-      dispatch({ type: ActionType.ADD_MESSAGE, message: newMessage });
+      // 更新消息内容
+      dispatch({ type: ActionType.UPDATE_MESSAGE, message: parseMessage(event.data) });
 
       // 如果为新对话，更新对话标题
       isNewConversation && publish(Event.UpdateConversationTitle);
@@ -150,15 +148,17 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
         source.close();
         return;
       }
+      // 更新消息内容
       dispatch({ type: ActionType.UPDATE_MESSAGE, message: parseMessage(event.data) });
     });
 
     source.addEventListener("end", () => {
       setIsGenerating(false);
+      disableScroll();
       if (isNewConversation) {
-        router.push(`/c/${newMessage.conversationId}`);
+        router.push(`/c/${payload.conversationId}`);
       } else {
-        revalidatePathAction(`/c/${newMessage.conversationId}`, "page");
+        revalidatePathAction(`/c/${payload.conversationId}`, "page");
       }
     });
   };

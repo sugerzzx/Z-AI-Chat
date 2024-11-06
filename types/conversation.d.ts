@@ -29,7 +29,8 @@ export type PayloadMessage = {
 export interface ConversationPayload {
   action: ConversationAction;
   messages: PayloadMessage[];
-  conversationId?: string;
+  conversationId: string;
   parentMessageId: string;
   model: ModelType;
+  assistantMessageId: string;
 }

@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
 
   const assistantMessage = await prisma.message.create({
     data: {
+      id: payload.assistantMessageId,
       content: "",
       role: Role.ASSISTANT,
       conversationId: userMessage.conversationId,
@@ -73,7 +74,11 @@ async function createUserMessage(payload: ConversationPayload) {
   const { messages, parentMessageId, conversationId } = payload;
   const { id, content, role, createTime } = messages[messages.length - 1];
 
-  if (conversationId) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+  });
+
+  if (conversation) {
     return prisma.message.create({
       data: {
         id,
@@ -87,6 +92,7 @@ async function createUserMessage(payload: ConversationPayload) {
   } else {
     const newConversation = await prisma.conversation.create({
       data: {
+        id: conversationId,
         title: content,
       },
     });
