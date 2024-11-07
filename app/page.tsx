@@ -2,7 +2,7 @@
 import MsgAndExamContainer from "@/components/page/MsgAndExamContainer";
 import ExampleComp from "@/components/example/ExampleComp";
 import { useEffect, useState } from "react";
-import { useEventBusContext } from "@/components/EventBusContext";
+import { useEventBusContext } from "@/components/EventBusContextProvider";
 import Conversation from "@/components/chatPage/Conversation";
 import { useAppContext } from "@/components/AppContextProvider";
 import { ActionType } from "@/lib/appReducer";

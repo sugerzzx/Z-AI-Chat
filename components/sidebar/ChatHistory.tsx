@@ -2,7 +2,7 @@
 import { cn, groupByDate } from "@/lib/utils";
 import { ConversationTitle } from "@/types/conversation";
 import { FC, useEffect, useMemo, useRef } from "react";
-import { useEventBusContext } from "../EventBusContext";
+import { useEventBusContext } from "../EventBusContextProvider";
 import Title from "./Title";
 import { usePathname } from "next/navigation";
 import { Event } from "@/constant/event.enum";

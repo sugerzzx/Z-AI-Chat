@@ -6,7 +6,7 @@ import { useAppContext } from "../AppContextProvider";
 import { MessageWithChildren } from "@/types/conversation";
 import { ActionType } from "@/lib/appReducer";
 import { Role } from "@/constant/conversation.enum";
-import { useScrollContext } from "../ScrollContext";
+import { useScrollContext } from "../ScrollContextProvider";
 
 interface MsgListProps {
   fetchedMessageList: MessageWithChildren[] | null;

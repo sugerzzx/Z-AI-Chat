@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { AppContextProvider } from "@/components/AppContextProvider";
 import SideBar from "@/components/sidebar/Sidebar";
-import { EventBusContextProvider } from "@/components/EventBusContext";
+import { EventBusContextProvider } from "@/components/EventBusContextProvider";
 import { ThemeProvider } from "@/components/ThemeProvide";
 import QueryClientProvider from "@/components/QueryClientProvider";
 

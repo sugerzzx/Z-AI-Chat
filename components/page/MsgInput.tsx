@@ -10,10 +10,10 @@ import { ConversationAction, ModelType, Role } from "@/constant/conversation.enu
 import { Event } from "@/constant/event.enum";
 import { ConversationPayload, MessageWithChildren, PayloadMessage } from "@/types/conversation";
 import { ReplaceFieldType } from "@/types/typeUtils";
-import { useEventBusContext } from "@/components/EventBusContext";
+import { useEventBusContext } from "@/components/EventBusContextProvider";
 import { useRouter } from "next/navigation";
 import { revalidatePathAction } from "@/lib/actions";
-import { useScrollContext } from "../ScrollContext";
+import { useScrollContext } from "../ScrollContextProvider";
 
 interface MsgInputProps {
   conversationId?: string;

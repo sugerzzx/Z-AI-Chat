@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import MsgInput from "./MsgInput";
-import { ScrollContextProvider } from "../ScrollContext";
+import { ScrollContextProvider } from "../ScrollContextProvider";
 
 interface MsgAndExamContainerProps {
   children?: React.ReactNode;
