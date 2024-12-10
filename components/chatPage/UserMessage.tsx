@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 
 interface UserMessageProps {
   content: string | null;
 }
 
-const UserMessage: FC<UserMessageProps> = ({ content = "" }) => {
+const UserMessage: FC<UserMessageProps> = memo(function UserMessage({ content = "" }) {
   return (
     <div className="group/conversation-turn relative flex w-full min-w-0 flex-col">
       <div className="flex-col gap-1 md:gap-3">
@@ -20,6 +20,6 @@ const UserMessage: FC<UserMessageProps> = ({ content = "" }) => {
       </div>
     </div>
   );
-};
+});
 
 export default UserMessage;

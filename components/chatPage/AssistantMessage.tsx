@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import Markdown from "../ui/Markdown";
 import { BotMessageSquare } from "lucide-react";
 
@@ -6,7 +6,9 @@ interface AssistantMessageProps {
   content: string | null;
 }
 
-const AssistantMessage: FC<AssistantMessageProps> = ({ content = "" }) => {
+const AssistantMessage: FC<AssistantMessageProps> = memo(function AssistantMessage({
+  content = "",
+}) {
   return (
     <>
       <div className="flex-shrink-0 flex flex-col relative items-end">
@@ -35,6 +37,6 @@ const AssistantMessage: FC<AssistantMessageProps> = ({ content = "" }) => {
       </div>
     </>
   );
-};
+});
 
 export default AssistantMessage;
