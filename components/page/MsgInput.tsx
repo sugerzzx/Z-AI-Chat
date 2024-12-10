@@ -13,7 +13,7 @@ import { ReplaceFieldType } from "@/types/typeUtils";
 import { useEventBusContext } from "@/components/EventBusContextProvider";
 import { useRouter } from "next/navigation";
 import { revalidatePathAction } from "@/lib/actions";
-import { useScrollContext } from "../ScrollContextProvider";
+import { enableScroll, disableScroll } from "@/hooks/useScroll";
 
 interface MsgInputProps {
   conversationId?: string;
@@ -32,7 +32,6 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   const { publish } = useEventBusContext();
   const router = useRouter();
   const isNewConversation = conversationId === "";
-  const { enableScroll, disableScroll } = useScrollContext();
 
   const upsertMessage = async (message: Omit<Message, "createTime">) => {
     const response = await fetch("/api/message/upsert", {
