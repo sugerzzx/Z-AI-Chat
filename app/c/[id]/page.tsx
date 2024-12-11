@@ -4,11 +4,11 @@ import { ConversationWithMapping, MessageWithChildren } from "@/types/conversati
 import { redirect } from "next/navigation";
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 const Page: FC<PageProps> = async ({ params }) => {
-  const conversationId = params.id;
+  const conversationId = (await params).id;
   const getConversation = async () => {
     try {
       const response = await fetch(

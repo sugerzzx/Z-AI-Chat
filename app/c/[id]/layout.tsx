@@ -3,11 +3,11 @@ import { FC } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-const Layout: FC<LayoutProps> = ({ children, params }) => {
-  return <MsgAndExamContainer conversationId={params.id}>{children}</MsgAndExamContainer>;
+const Layout: FC<LayoutProps> = async ({ children, params }) => {
+  return <MsgAndExamContainer conversationId={(await params).id}>{children}</MsgAndExamContainer>;
 };
 
 export default Layout;
