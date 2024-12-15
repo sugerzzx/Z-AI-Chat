@@ -13,7 +13,7 @@ import { ReplaceFieldType } from "@/types/typeUtils";
 import { useEventBusContext } from "@/components/EventBusContextProvider";
 import { useRouter } from "next/navigation";
 import { revalidatePathAction } from "@/lib/actions";
-import { enableScroll, disableScroll } from "@/hooks/useScroll";
+import { startAutoScroll, endAutoScroll } from "@/hooks/useScroll";
 
 interface MsgInputProps {
   conversationId?: string;
@@ -100,7 +100,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
 
     setUserInput("");
     doSend(payload);
-    enableScroll();
+    startAutoScroll();
   };
 
   const doSend = async (payload: ConversationPayload) => {
@@ -153,7 +153,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
 
     source.addEventListener("end", () => {
       setIsGenerating(false);
-      disableScroll();
+      endAutoScroll();
       if (isNewConversation) {
         router.push(`/c/${payload.conversationId}`);
       } else {

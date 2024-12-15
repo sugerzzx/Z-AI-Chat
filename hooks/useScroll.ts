@@ -1,87 +1,158 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useState, useRef } from "react";
 
 let scrollElement: HTMLElement | null = null;
-let isScrollEnabled = false;
+let isAutoScroll = false;
 
-export const enableScroll = () => {
-  scrollElement?.addEventListener("scroll", handleScrollEnd);
-  isScrollEnabled = true;
-};
-
-export const disableScroll = () => {
-  scrollElement?.removeEventListener("scroll", handleScrollEnd);
-  isScrollEnabled = false;
-};
-
-let scrollTimeout: number | null = null;
-const smoothScrollToBottom = (element: HTMLElement, duration: number) => {
-  if (scrollTimeout) {
-    cancelAnimationFrame(scrollTimeout);
+const scrollToBottom = () => {
+  if (scrollElement) {
+    scrollElement.scrollTo(0, scrollElement.scrollHeight);
   }
+};
 
-  const distance = element.scrollHeight - element.scrollTop;
-  const startTime = performance.now();
+const pauseAutoScroll = () => {
+  if (isAutoScroll) {
+    isAutoScroll = false;
+  }
+};
 
-  const scrollStep = (timestamp: DOMHighResTimeStamp) => {
-    const elapsedTime = timestamp - startTime;
-    console.log(elapsedTime);
+const resumeAutoScroll = () => {
+  if (!isAutoScroll) {
+    isAutoScroll = true;
+  }
+};
 
-    const progress = Math.min(elapsedTime / duration, 1);
-    element.scrollTo(0, element.scrollTop + distance * progress);
+const getIsBottom = (event: Event) => {
+  const target = event.target as HTMLElement;
+  const tolerance = 1;
+  return target.clientHeight + target.scrollTop >= target.scrollHeight - tolerance;
+};
 
-    if (progress < 1) {
-      requestAnimationFrame(scrollStep);
+const handleScroll = (event: Event) => {
+  const isBottom = getIsBottom(event);
+  if (!isBottom) {
+    pauseAutoScroll();
+  } else {
+    resumeAutoScroll();
+  }
+};
+
+export const startAutoScroll = () => {
+  scrollElement?.addEventListener("scroll", handleScroll);
+  isAutoScroll = true;
+};
+
+export const endAutoScroll = () => {
+  scrollElement?.removeEventListener("scroll", handleScroll);
+  isAutoScroll = false;
+};
+
+export const useScroll: () => [
+  (node: HTMLElement | null) => void,
+  (node: HTMLElement | null) => void,
+  boolean,
+  () => void,
+] = () => {
+  const [isShowButton, setIsShowButton] = useState(false);
+  const requestId = useRef<number | null>(null);
+  const controller = new AbortController();
+  controller.signal;
+
+  const handleScroll = (event: Event) => {
+    if (requestId.current || isAutoScroll) {
+      return;
+    }
+
+    const isBottom = getIsBottom(event);
+    if (isBottom) {
+      setIsShowButton(false);
+    } else {
+      setIsShowButton(true);
     }
   };
 
-  scrollTimeout = requestAnimationFrame(scrollStep);
-};
-
-const handleScrollEnd = (e: Event) => {
-  const target = e.target as HTMLElement;
-  const tolerance = 1;
-  const isBottom = target.clientHeight + target.scrollTop >= target.scrollHeight - tolerance;
-  if (!isBottom) {
-    if (scrollTimeout) {
-      cancelAnimationFrame(scrollTimeout);
-    }
-    isScrollEnabled = false;
-  } else {
-    isScrollEnabled = true;
-  }
-};
-
-export const useRegisterScrollElement = () => {
-  const registerCallback = useCallback((node: HTMLElement | null) => {
+  const registerScrollElement = useCallback((node: HTMLElement | null) => {
     if (node) {
       scrollElement = node;
+
+      scrollElement.addEventListener("scroll", handleScroll);
+
+      const observer = new ResizeObserver(() => {
+        scrollToBottom();
+        observer.disconnect();
+      });
+      observer.observe(scrollElement);
     }
   }, []);
 
-  return registerCallback;
-};
-
-export const useRegisterObservedElement = () => {
-  const preObserver = useRef<ResizeObserver | null>(null);
-
-  const registerCallback = useCallback((node: HTMLElement | null) => {
-    if (preObserver.current) {
-      preObserver.current.disconnect();
-      preObserver.current = null;
-    }
-
+  const registerObservedElement = useCallback((node: HTMLElement | null) => {
+    let observer: ResizeObserver | null;
     if (node) {
-      const observer = new ResizeObserver(() => {
-        if (isScrollEnabled && scrollElement) {
-          const duration = 500;
-          smoothScrollToBottom(scrollElement, duration);
+      observer = new ResizeObserver(() => {
+        if (isAutoScroll) {
+          scrollToBottom();
         }
       });
-
       observer.observe(node);
-      preObserver.current = observer;
     }
+
+    return () => {
+      observer?.disconnect();
+    };
   }, []);
 
-  return registerCallback;
+  const cancelAnimation = () => {
+    if (requestId.current) {
+      cancelAnimationFrame(requestId.current);
+      requestId.current = null;
+    }
+  };
+
+  const smoothScrollToBottom = () => {
+    if (!scrollElement) {
+      return;
+    }
+
+    cancelAnimation();
+
+    const start = scrollElement.scrollTop;
+    const distance = scrollElement.scrollHeight - start;
+    const duration = distance / 15;
+
+    const startTime = performance.now();
+
+    function easeOutCubic(t: number) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    const scrollStep = (timestamp: DOMHighResTimeStamp) => {
+      const elapsedTime = timestamp - startTime;
+
+      const progress = Math.min(elapsedTime / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+      scrollElement?.scrollTo(0, start + distance * easedProgress);
+
+      if (progress < 1) {
+        requestId.current = requestAnimationFrame(scrollStep);
+      } else {
+        requestId.current = null;
+      }
+    };
+
+    scrollElement.addEventListener("wheel", cancelAnimation, { once: true });
+    scrollElement.addEventListener("touchstart", cancelAnimation, { once: true });
+    scrollElement.addEventListener(
+      "mousedown",
+      (event) => {
+        if (event.button === 1) {
+          cancelAnimation();
+        }
+      },
+      { once: true },
+    );
+
+    requestId.current = requestAnimationFrame(scrollStep);
+    setIsShowButton(false);
+  };
+
+  return [registerScrollElement, registerObservedElement, isShowButton, smoothScrollToBottom];
 };
