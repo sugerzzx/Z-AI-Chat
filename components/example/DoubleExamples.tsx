@@ -1,9 +1,6 @@
-import { FC } from "react";
 import Example from "./ExampleItem";
 
-interface DoubleExamplesProps {}
-
-const DoubleExamples: FC<DoubleExamplesProps> = ({}) => {
+const DoubleExamples = ({}) => {
   return (
     <div className="flex max-w-3xl flex-wrap items-stretch justify-center gap-4">
       <Example />

@@ -1,9 +1,6 @@
-import { FC } from "react";
 import DoubleExamples from "./DoubleExamples";
 
-interface ExampleAreaProps {}
-
-const ExampleArea: FC<ExampleAreaProps> = ({}) => {
+const ExampleArea = ({}) => {
   return (
     <div className="flex h-full flex-col items-center justify-center">
       <svg

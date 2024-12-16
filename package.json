@@ -46,6 +46,7 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.0",
+    "@eslint/eslintrc": "^3",
     "patch-package": "^8.0.0",
     "postcss": "^8",
     "postinstall-postinstall": "^2.1.0",

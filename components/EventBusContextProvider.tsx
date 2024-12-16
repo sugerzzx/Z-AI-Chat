@@ -1,12 +1,12 @@
 "use client";
 import { createContext, FC, ReactNode, useCallback, useContext, useMemo, useRef } from "react";
 
-export type EventListener = (data: any) => void;
+export type EventListener = (data: unknown) => void;
 
 type EventBusProps = {
   subscribe: (eventName: string, callback: EventListener) => void;
   unsubscribe: (eventName: string, callback: EventListener) => void;
-  publish: (eventName: string, data?: any) => void;
+  publish: (eventName: string, data?: unknown) => void;
 };
 
 const EventBusContext = createContext<EventBusProps>(null!);
@@ -37,7 +37,7 @@ export const EventBusContextProvider: FC<EventBusContextProviderProps> = ({ chil
     }
   }, []);
 
-  const publish = useCallback((eventName: string, data?: any) => {
+  const publish = useCallback((eventName: string, data?: unknown) => {
     if (listenersRef.current[eventName]) {
       listenersRef.current[eventName].forEach((cb) => cb(data));
     }

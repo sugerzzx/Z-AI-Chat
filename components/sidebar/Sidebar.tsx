@@ -1,13 +1,10 @@
-import { FC } from "react";
 import SwitchAndNewChat from "./SwitchAndNewChat";
 import ChatGpt from "./ChatGpt";
 import ChatHistory from "./ChatHistory";
 import Container from "./Container";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 
-interface SideBarProps {}
-
-const SideBar: FC<SideBarProps> = ({}) => {
+const SideBar = ({}) => {
   return (
     <Container>
       <SwitchAndNewChat />

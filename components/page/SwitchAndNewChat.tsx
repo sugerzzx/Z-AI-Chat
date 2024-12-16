@@ -1,12 +1,9 @@
 "use client";
-import { FC } from "react";
 import { useAppContext } from "../AppContextProvider";
 import SidebarControler from "./SidebarController";
 import NewChatBtn from "./NewChatBtn";
 
-interface SwitchAndNewChatProps {}
-
-const SwitchAndNewChat: FC<SwitchAndNewChatProps> = ({}) => {
+const SwitchAndNewChat = () => {
   const {
     state: { isSidebarOpen },
   } = useAppContext();

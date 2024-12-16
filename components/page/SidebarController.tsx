@@ -2,7 +2,6 @@
 import { FC } from "react";
 import { useAppContext } from "../AppContextProvider";
 import { ActionType } from "@/lib/appReducer";
-import { cn } from "@/lib/utils";
 import ArrowTooltip, { ArrowTooltipProps } from "@/components/ui/ArrowTooltip";
 import { Button } from "@/components/ui/Button";
 

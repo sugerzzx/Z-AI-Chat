@@ -193,7 +193,7 @@ const TitleEdit: FC<{
     },
   });
 
-  const handleBlur = async (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = async () => {
     setIsEdit(false);
     if (inputValue === title) {
       return;
@@ -201,7 +201,8 @@ const TitleEdit: FC<{
       setCurrentTitle(inputValue);
       try {
         updateTitleMutation.mutate(inputValue);
-      } catch (error) {
+      } catch (e) {
+        console.error(e);
         setCurrentTitle(title);
       }
     }

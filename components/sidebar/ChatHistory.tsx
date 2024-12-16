@@ -11,9 +11,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { QueryKey } from "@/constant/queryKey.enum";
 import { motion, AnimatePresence } from "framer-motion";
 
-interface ChatHistoryProps {}
-
-const ChatHistory: FC<ChatHistoryProps> = ({}) => {
+const ChatHistory = () => {
   const { subscribe, unsubscribe } = useEventBusContext();
   const pathname = usePathname();
   const limit = 20;
@@ -123,9 +121,7 @@ const ChatHistory: FC<ChatHistoryProps> = ({}) => {
 
 export default ChatHistory;
 
-interface LoadingProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-const Loading: FC<LoadingProps> = ({ className }) => {
+const Loading: FC<React.HTMLAttributes<HTMLDivElement>> = ({ className }) => {
   return (
     <div className={cn("w-full flex items-center justify-center", className)}>
       <Loader className="animate-spin" />

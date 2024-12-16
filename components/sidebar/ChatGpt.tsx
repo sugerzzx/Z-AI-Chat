@@ -1,12 +1,9 @@
-import { FC } from "react";
 import ClickTrans from "../ui/ClickTrans";
 import Link from "next/link";
 import { MessagesSquare } from "lucide-react";
 import { Button } from "../ui/Button";
 
-interface ChatGptProps {}
-
-const ChatGpt: FC<ChatGptProps> = ({}) => {
+const ChatGpt = () => {
   return (
     <ClickTrans>
       <Link

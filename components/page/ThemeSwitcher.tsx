@@ -1,5 +1,4 @@
 "use client";
-import { FC } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/Button";
@@ -10,9 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 
-interface ThemeSwitcherProps {}
-
-const ThemeSwitcher: FC<ThemeSwitcherProps> = ({}) => {
+const ThemeSwitcher = () => {
   const { setTheme } = useTheme();
 
   return (

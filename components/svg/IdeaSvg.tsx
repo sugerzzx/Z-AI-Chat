@@ -1,8 +1,4 @@
-import { FC } from "react";
-
-interface IdeaSvgProps {}
-
-const IdeaSvg: FC<IdeaSvgProps> = ({}) => {
+const IdeaSvg = ({}) => {
   return (
     <>
       <svg

@@ -1,10 +1,7 @@
-import { FC } from "react";
 import ArrowTooltip from "@/components/ui/ArrowTooltip";
 import { Button } from "@/components/ui/Button";
 
-interface NewChatBtnProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
-
-const NewChatBtn: FC<NewChatBtnProps> = () => {
+const NewChatBtn = () => {
   return (
     <ArrowTooltip title="新聊天" side="bottom">
       <Button variant="ghost" size="icon">

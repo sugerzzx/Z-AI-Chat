@@ -31,24 +31,13 @@ export const initialState: State = {
   conversationId: "",
 };
 
-const actionMap = new Map<ActionType, (state: State, action: any) => State>([
-  [
-    ActionType.UPDATE,
-    (state: State, action: UpdateAction) => {
+export const appReducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case ActionType.UPDATE:
       return { ...state, [action.field]: action.value };
-    },
-  ],
-  // 添加一个消息
-  [
-    ActionType.ADD_MESSAGE,
-    (state: State, action: MessageAction) => {
+    case ActionType.ADD_MESSAGE:
       return { ...state, messageList: state.messageList.concat(action.message) };
-    },
-  ],
-  // 更新一个消息的内容
-  [
-    ActionType.UPDATE_MESSAGE,
-    (state: State, action: MessageAction) => {
+    case ActionType.UPDATE_MESSAGE:
       const messageList = state.messageList.map((message) => {
         if (message.id === action.message.id) {
           return action.message;
@@ -56,14 +45,7 @@ const actionMap = new Map<ActionType, (state: State, action: any) => State>([
         return message;
       });
       return { ...state, messageList };
-    },
-  ],
-]);
-
-export const appReducer = (state: State, action: Action) => {
-  const reducer = actionMap.get(action.type);
-  if (!reducer) {
-    return state;
+    default:
+      return state;
   }
-  return reducer(state, action);
 };

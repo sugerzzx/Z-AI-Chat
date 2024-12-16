@@ -33,22 +33,6 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
   const router = useRouter();
   const isNewConversation = conversationId === "";
 
-  const upsertMessage = async (message: Omit<Message, "createTime">) => {
-    const response = await fetch("/api/message/upsert", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-    if (!response.ok) {
-      console.log(response.statusText);
-      return;
-    }
-    const { data } = await response.json();
-    return data.message;
-  };
-
   const sendMessage = async () => {
     const message: PayloadMessage = {
       id: uuid(),
@@ -69,7 +53,9 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
     };
 
     // 如果为新对话，发布Event.NewConversation
-    isNewConversation && publish(Event.NewConversation);
+    if (isNewConversation) {
+      publish(Event.NewConversation);
+    }
 
     // 如果有父消息，更新父消息的children
     if (parentMessage) {
@@ -137,7 +123,9 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
       dispatch({ type: ActionType.UPDATE_MESSAGE, message: parseMessage(event.data) });
 
       // 如果为新对话，更新对话标题
-      isNewConversation && publish(Event.UpdateConversationTitle);
+      if (isNewConversation) {
+        publish(Event.UpdateConversationTitle);
+      }
     });
 
     source.addEventListener("message", (event: MessageEvent) => {
@@ -226,7 +214,7 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                     onChange={(e) => setUserInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     ref={(ref) => {
-                      ref?.addEventListener("input", (e) => {
+                      ref?.addEventListener("input", () => {
                         ref.style.height = "auto";
                         ref.style.height = ref.scrollHeight + "px";
                       });
