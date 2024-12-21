@@ -213,11 +213,12 @@ const MsgInput: FC<MsgInputProps> = ({ conversationId = "" }) => {
                     value={userInput}
                     onChange={(e) => setUserInput(e.target.value)}
                     onKeyDown={handleKeyDown}
+                    onInput={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      target.style.height = "auto";
+                      target.style.height = target.scrollHeight + "px";
+                    }}
                     ref={(ref) => {
-                      ref?.addEventListener("input", () => {
-                        ref.style.height = "auto";
-                        ref.style.height = ref.scrollHeight + "px";
-                      });
                       if (document.activeElement?.tagName === "INPUT") return;
                       ref?.focus();
                     }}
