@@ -54,8 +54,6 @@ export const useScroll: () => [
 ] = () => {
   const [isShowButton, setIsShowButton] = useState(false);
   const requestId = useRef<number | null>(null);
-  const controller = new AbortController();
-  controller.signal;
 
   const handleScroll = (event: Event) => {
     if (requestId.current || isAutoScroll) {
