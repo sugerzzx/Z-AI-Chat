@@ -80,6 +80,11 @@ export const useScroll: () => [
       });
       observer.observe(scrollElement);
     }
+
+    return () => {
+      scrollElement?.removeEventListener("scroll", handleScroll);
+      scrollElement = null;
+    };
   }, []);
 
   const registerObservedElement = useCallback((node: HTMLElement | null) => {
