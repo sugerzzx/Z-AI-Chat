@@ -2,10 +2,13 @@ import { cn } from "@/lib/utils";
 import { FC } from "react";
 import ReactMarkdown, { Options as MarkdownProps } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { atomOneDark, atomOneLight } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { useTheme } from "next-themes";
 
 const Markdown: FC<MarkdownProps> = ({ className, children, ...props }) => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
   return (
     <ReactMarkdown
       rehypePlugins={[remarkGfm]}
@@ -16,7 +19,12 @@ const Markdown: FC<MarkdownProps> = ({ className, children, ...props }) => {
           const { children, className, ...rest } = props;
           const match = /language-(\w+)/.exec(className || "");
           return match ? (
-            <SyntaxHighlighter {...rest} PreTag="div" language={match[1]} style={darcula}>
+            <SyntaxHighlighter
+              {...rest}
+              PreTag="div"
+              language={match[1]}
+              style={isDark ? atomOneDark : atomOneLight}
+            >
               {String(children).replace(/\n$/, "")}
             </SyntaxHighlighter>
           ) : (
